@@ -9,7 +9,6 @@ let numOfRevealed = 0;
 let squares = [];
 let counter = 40;
 let gameEnded = false; // либо создать функцию, либо удалить
-let firstClick = true;
 
 // Create grid of squares
 function createBoard() {
@@ -145,16 +144,35 @@ function handleClick(event) {
 
 // RIGHT_CLICK___________________________________________________________________________________________
 function handleRightClick(event) {
-  event.preventDefault();
-  if (gameEnded) {
-    return;
-  }
-  console.log(numOfFlagged);
-  const row = event.target.dataset.row;
-  const col = event.target.dataset.col;
-  const square = squares[row][col];
-  if (!square.isRevealed && numOfFlagged != 40) {
-    if (square.isFlagged) {
+  if (numOfRevealed == 1) {
+    event.preventDefault();
+    if (gameEnded) {
+      return;
+    }
+    const row = event.target.dataset.row;
+    const col = event.target.dataset.col;
+    const square = squares[row][col];
+    if (!square.isRevealed && numOfFlagged != 40) {
+      if (square.isFlagged) {
+        square.isFlagged = false;
+        square.element.classList.remove("flagged");
+        square.element.classList.add("questioned");
+        square.isQuestioned = true;
+        numOfQuestioned++;
+        numOfFlagged--;
+        setCounter();
+      } else if (square.isQuestioned) {
+        square.isQuestioned = false;
+        square.element.classList.remove("questioned");
+        numOfQuestioned--;
+      } else {
+        square.isFlagged = true;
+        square.element.classList.remove("bomb_hidden");
+        square.element.classList.add("flagged");
+        numOfFlagged++;
+        setCounter();
+      }
+    } else if (square.isFlagged && numOfFlagged == 40) {
       square.isFlagged = false;
       square.element.classList.remove("flagged");
       square.element.classList.add("questioned");
@@ -162,25 +180,7 @@ function handleRightClick(event) {
       numOfQuestioned++;
       numOfFlagged--;
       setCounter();
-    } else if (square.isQuestioned) {
-      square.isQuestioned = false;
-      square.element.classList.remove("questioned");
-      numOfQuestioned--;
-    } else {
-      square.isFlagged = true;
-      square.element.classList.remove("bomb_hidden");
-      square.element.classList.add("flagged");
-      numOfFlagged++;
-      setCounter();
     }
-  } else if (square.isFlagged && numOfFlagged == 40) {
-    square.isFlagged = false;
-    square.element.classList.remove("flagged");
-    square.element.classList.add("questioned");
-    square.isQuestioned = true;
-    numOfQuestioned++;
-    numOfFlagged--;
-    setCounter();
   }
 }
 
@@ -250,19 +250,5 @@ emoticon.addEventListener("mouseup", handleResetEmoticon);
 function handleResetEmoticon() {
   location.reload(); // временный ресет
 }
-
-// function handleResetEmoticon() {
-//   if (!firstClick) {
-//     return;
-//   }
-//   firstClick = true;
-//   numOfFlagged = 0;
-//   numOfRevealed = 0;
-//   squares = [];
-//   counter = 40;
-//   gameEnded = false;
-//   emoticon.src = "images/emoticonsButtons/btnRestart.png";
-//   startTimer();
-// }
 
 createBoard();

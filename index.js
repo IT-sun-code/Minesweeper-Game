@@ -21,7 +21,6 @@ function createBoard() {
       square.dataset.row = i;
       square.dataset.col = j;
       square.addEventListener("click", handleClick);
-      // square.addEventListener("click", handleFirstClick); /////////////////////////////////
       square.addEventListener("contextmenu", handleRightClick);
       gameField.appendChild(square);
       squares[i][j] = {
@@ -36,7 +35,6 @@ function createBoard() {
   }
 
   // Add mines to squares (СОЗДАТЬ ТОЛЬКО ПОСЛЕ 1 КЛИКА)
-  // if (!firstClick) {
   let numMinesRemaining = numOfMines;
   while (numMinesRemaining > 0) {
     const row = Math.floor(Math.random() * numOfRows);
@@ -44,13 +42,9 @@ function createBoard() {
     if (!squares[row][col].isMine) {
       squares[row][col].isMine = true;
       numMinesRemaining--;
-      // console.log(squares[row][col].element);
-      // squares[row][col].element.classList.add("bomb");
-      squares[row][col].element.classList.add("new");
       squares[row][col].element.classList.add("bomb_hidden");
     }
   }
-  // }
 
   // Calculate number of neighbouring mines for each square
   for (let i = 0; i < numOfRows; i++) {
@@ -74,6 +68,7 @@ function createBoard() {
   }
 }
 
+// Подсчитать пустые клеточки
 function revealSquare(square) {
   if (square.isRevealed || square.isFlagged) {
     return;
@@ -95,10 +90,12 @@ function revealSquare(square) {
   }
 }
 
+// По левому клику
 function handleClick(event) {
   if (gameEnded) {
     return;
   }
+
   const row = event.target.dataset.row;
   const col = event.target.dataset.col;
   const square = squares[row][col];
@@ -108,22 +105,22 @@ function handleClick(event) {
   }
 
   if (square.isMine) {
+    emoticon.src = "images/emoticonsButtons/btnLose.png";
     square.element.classList.add("bomb__expoled");
 
     for (let i = 0; i < numOfRows; i++) {
       for (let j = 0; j < numOfCols; j++) {
-        // console.log(squares[i][j])
-        if (squares[i][j].isMine) {
-          console.log(squares[i][j].element.classList);
+        if (squares[i][j].isMine && !squares[i][j].isFlagged) {
           squares[i][j].element.classList.remove("bomb_hidden");
           squares[i][j].element.classList.remove("questioned");
-          squares[i][j].element.classList.remove("flagged");
           squares[i][j].element.classList.add("bomb");
+        } else if (!squares[i][j].isMine && squares[i][j].isFlagged) {
+          squares[i][j].element.classList.remove("bomb_hidden");
+          squares[i][j].element.classList.add("not_bomb");
         }
       }
     }
     // endGame(false);
-    // squares[row][col].element.classList.add("bomb");
     return;
   }
 
@@ -140,10 +137,11 @@ function handleRightClick(event) {
   if (gameEnded) {
     return;
   }
+  console.log(numOfFlagged);
   const row = event.target.dataset.row;
   const col = event.target.dataset.col;
   const square = squares[row][col];
-  if (!square.isRevealed) {
+  if (!square.isRevealed && numOfFlagged != 40) {
     if (square.isFlagged) {
       square.isFlagged = false;
       square.element.classList.remove("flagged");
@@ -151,6 +149,7 @@ function handleRightClick(event) {
       square.isQuestioned = true;
       numOfQuestioned++;
       numOfFlagged--;
+      setCounter();
     } else if (square.isQuestioned) {
       square.isQuestioned = false;
       square.element.classList.remove("questioned");
@@ -160,7 +159,16 @@ function handleRightClick(event) {
       square.element.classList.remove("bomb_hidden");
       square.element.classList.add("flagged");
       numOfFlagged++;
+      setCounter();
     }
+  } else if (square.isFlagged && numOfFlagged == 40) {
+    square.isFlagged = false;
+    square.element.classList.remove("flagged");
+    square.element.classList.add("questioned");
+    square.isQuestioned = true;
+    numOfQuestioned++;
+    numOfFlagged--;
+    setCounter();
   }
 }
 
@@ -176,34 +184,14 @@ let counterUnits = document.querySelector("[data-id='2']");
 let numOfUnits = 0;
 let numOfDozens = 4;
 
-function startCounter() {
-  const counter = setInterval(() => {
-    if ((numOfUnits == 0 && numOfDozens == 0) || gameEnded) {
-      gameEnded = true;
-      clearInterval(counter);
-      alert("GAME OVER");
-      console.log(gameEnded);
-    }
-    if (numOfDozens > 0 && numOfUnits == 0) {
-      --numOfDozens;
-      numOfUnits = 10;
-    }
-    if (numOfUnits > 0 && numOfUnits <= 10 && numOfDozens >= 0) {
-      --numOfUnits;
-    }
-    counterUnits.src = `images/timerDigits/timerDigit_${numOfUnits}.png`;
-    counterDozens.src = `images/timerDigits/timerDigit_${numOfDozens}.png`;
-  }, 100);
+function setCounter() {
+  if (numOfFlagged >= 41) return;
+  let count = 40 - numOfFlagged;
+  numOfUnits = count % 10;
+  numOfDozens = Math.floor((count / 10) % 10);
+  counterUnits.src = `images/timerDigits/timerDigit_${numOfUnits}.png`;
+  counterDozens.src = `images/timerDigits/timerDigit_${numOfDozens}.png`;
 }
-
-// RESTART_COUNTER______________________________________________________________________________________
-// function restartCounter() {
-//   numOfUnits = 0;
-//   numOfDozens = 4;
-//   units = 0;
-//   dozens = 0;
-//   hundreds = 0;
-// }
 
 // START_TIMER___________________________________________________________________________________________
 const timerDigits = document.querySelectorAll(".game__timer_img");
@@ -242,55 +230,27 @@ function startTimer() {
 
 // GAME RESET___________________________________________________________________________________________
 const emoticon = document.querySelector(".game__emoticon_img");
-emoticon.addEventListener("click", handleReset);
-function handleReset() {
-  if (!firstClick) {
-    return;
-  }
-  firstClick = false;
-  numOfFlagged = 0;
-  numOfRevealed = 0;
-  squares = [];
-  counter = 40;
-  // time = 0;
-  gameEnded = false;
-  emoticon.src = "images/emoticonsButtons/btnRestart.png";
-  startCounter();
-  startTimer();
+emoticon.addEventListener("mousedown", handlePushEmoticon);
+function handlePushEmoticon() {
+  emoticon.src = "images/emoticonsButtons/btnRestartPressed.png";
+}
+emoticon.addEventListener("mouseup", handleResetEmoticon);
+function handleResetEmoticon() {
+  location.reload(); // временный ресет
 }
 
-// GAME_END_________________________________________________________________________________________________
-// function endGame(hasWon) {
-//   gameEnded = true;
-//   if (hasWon) {
-//     alert("Congratulations, you won!");
-//   } else {
-//     alert("Sorry, you lost.");
-//   }
-//   for (let i = 0; i < numOfRows; i++) {
-//     for (let j = 0; j < numOfCols; j++) {
-//       const square = squares[i][j];
-//       if (square.isMine) {
-//         // square.element.classList.add("revealed", "bomb");
-//         console.log(squares[row][col].element);
-//       }
-//       square.element.removeEventListener("click", handleClick);
-//       square.element.removeEventListener("contextmenu", handleRightClick);
-//     }
-//   }
-// }
-
-// function handleFirstClick(event) {
-//   if (gameEnded) {
+// function handleResetEmoticon() {
+//   if (!firstClick) {
 //     return;
 //   }
-//   console.log(event);
-//   // const sq = event.target.className("square");
-//   // if (sq) {
-//   //   firstClick = false;
-//   // }
+//   firstClick = true;
+//   numOfFlagged = 0;
+//   numOfRevealed = 0;
+//   squares = [];
+//   counter = 40;
+//   gameEnded = false;
+//   emoticon.src = "images/emoticonsButtons/btnRestart.png";
+//   startTimer();
 // }
 
-//_________________________________________________________________________________________________
-// handleFirstClick();
 createBoard();

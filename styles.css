@@ -97,8 +97,13 @@ img {
 }
 
 .bomb_hidden {
-  background-image: url("./images/fieldCells/cells/cellUndiscovered.png");
+  background-image: url("images/fieldCells/cells/cellUndiscovered.png");
 }
+
+.not_bomb {
+  background-image: url("images/fieldCells/mines/mineDecoy.png")
+}
+
 /* .board {
   display: grid;
   grid-template-columns: repeat(10, 30px);

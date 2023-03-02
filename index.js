@@ -110,6 +110,7 @@ function handleClick(event) {
 
     for (let i = 0; i < numOfRows; i++) {
       for (let j = 0; j < numOfCols; j++) {
+        squares[i][j].element.style.pointerEvents = "none";
         if (squares[i][j].isMine && !squares[i][j].isFlagged) {
           squares[i][j].element.classList.remove("bomb_hidden");
           squares[i][j].element.classList.remove("questioned");
@@ -120,14 +121,18 @@ function handleClick(event) {
         }
       }
     }
-    // endGame(false);
     return;
   }
 
   revealSquare(square);
 
   if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
-    // endGame(true);
+    for (let i = 0; i < numOfRows; i++) {
+      for (let j = 0; j < numOfCols; j++) {
+        squares[i][j].element.style.pointerEvents = "none";
+      }
+    }
+    emoticon.src = "images/emoticonsButtons/btnWin.png";
   }
 }
 

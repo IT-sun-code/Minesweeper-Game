@@ -8,7 +8,7 @@ let numOfQuestioned = 0;
 let numOfRevealed = 0;
 let squares = [];
 let counter = 40;
-let gameEnded = false;
+let gameEnded = false; // либо создать функцию, либо удалить
 let firstClick = true;
 
 // Create grid of squares
@@ -31,18 +31,6 @@ function createBoard() {
         isQuestioned: false,
         numOfNeighbouringMines: 0,
       };
-    }
-  }
-
-  // Add mines to squares (СОЗДАТЬ ТОЛЬКО ПОСЛЕ 1 КЛИКА)
-  let numMinesRemaining = numOfMines;
-  while (numMinesRemaining > 0) {
-    const row = Math.floor(Math.random() * numOfRows);
-    const col = Math.floor(Math.random() * numOfCols);
-    if (!squares[row][col].isMine) {
-      squares[row][col].isMine = true;
-      numMinesRemaining--;
-      squares[row][col].element.classList.add("bomb_hidden");
     }
   }
 
@@ -125,6 +113,25 @@ function handleClick(event) {
   }
 
   revealSquare(square);
+
+  if (numOfRevealed == 1) {
+    const squareEmpty = document.querySelector(".field__empty");
+    const emptyRow = Number(squareEmpty.dataset.row);
+    const emptyCol = Number(squareEmpty.dataset.col);
+
+    let numMinesRemaining = numOfMines;
+    while (numMinesRemaining > 0) {
+      const row = Math.floor(Math.random() * numOfRows);
+      const col = Math.floor(Math.random() * numOfCols);
+      if (row !== emptyRow || col !== emptyCol) {
+        if (!squares[row][col].isMine) {
+          squares[row][col].isMine = true;
+          numMinesRemaining--;
+          squares[row][col].element.classList.add("bomb_hidden");
+        }
+      }
+    }
+  }
 
   if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
     for (let i = 0; i < numOfRows; i++) {

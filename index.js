@@ -19,8 +19,7 @@ function createBoard() {
       square.className = "square";
       square.dataset.row = i;
       square.dataset.col = j;
-      square.addEventListener("mousedown", handlePress);
-      square.addEventListener("mouseup", handleClick);
+      square.addEventListener("click", handleClick);
       square.addEventListener("contextmenu", handleRightClick);
       gameField.appendChild(square);
       squares[i][j] = {
@@ -33,17 +32,8 @@ function createBoard() {
       };
     }
   }
-}
 
-function handlePress(event) {
-  if (event.button === 0) {
-    emoticon.src = "images/emoticonsButtons/btnScared.png";
-    event.target.classList.add("field__pressed");
-  }
-}
-
-// Calculate number of neighbouring mines for each square
-function calculateNeighbouringMines() {
+  // Calculate number of neighbouring mines for each square
   for (let i = 0; i < numOfRows; i++) {
     for (let j = 0; j < numOfCols; j++) {
       if (squares[i][j].isMine) {
@@ -67,8 +57,9 @@ function calculateNeighbouringMines() {
 
 // Подсчитать пустые клеточки
 function revealSquare(square) {
-  if (square.isRevealed || square.isFlagged) return;
-
+  if (square.isRevealed || square.isFlagged) {
+    return;
+  }
   square.isRevealed = true;
   square.element.classList.add("field__empty");
   numOfRevealed++;
@@ -77,8 +68,9 @@ function revealSquare(square) {
       for (let dj = -1; dj <= 1; dj++) {
         const ni = parseInt(square.element.dataset.row) + di;
         const nj = parseInt(square.element.dataset.col) + dj;
-        if (ni < 0 || ni >= numOfRows || nj < 0 || nj >= numOfCols) continue;
-
+        if (ni < 0 || ni >= numOfRows || nj < 0 || nj >= numOfCols) {
+          continue;
+        }
         revealSquare(squares[ni][nj]);
       }
     }
@@ -87,72 +79,71 @@ function revealSquare(square) {
 
 // По левому клику
 function handleClick(event) {
-  if (event.button === 0) {
-    if (gameEnded) return;
+  if (gameEnded) {
+    return;
+  }
 
-    emoticon.src = "images/emoticonsButtons/btnRestart.png";
-    event.target.classList.remove("field__pressed");
+  const row = event.target.dataset.row;
+  const col = event.target.dataset.col;
+  const square = squares[row][col];
 
-    const row = event.target.dataset.row;
-    const col = event.target.dataset.col;
-    const square = squares[row][col];
+  if (square.isFlagged || square.isQuestioned) {
+    return;
+  }
 
-    if (square.isFlagged || square.isQuestioned) return;
+  if (square.isMine) {
+    gameEnded = true;
+    emoticon.src = "images/emoticonsButtons/btnLose.png";
+    square.element.classList.add("bomb__expoled");
 
-    if (square.isMine) {
-      gameEnded = true;
-      emoticon.src = "images/emoticonsButtons/btnLose.png";
-      square.element.classList.add("bomb__expoled");
-
-      for (let i = 0; i < numOfRows; i++) {
-        for (let j = 0; j < numOfCols; j++) {
-          squares[i][j].element.style.pointerEvents = "none";
-          if (squares[i][j].isMine && !squares[i][j].isFlagged) {
-            squares[i][j].element.classList.remove("bomb_hidden");
-            squares[i][j].element.classList.remove("questioned");
-            squares[i][j].element.classList.add("bomb");
-          } else if (!squares[i][j].isMine && squares[i][j].isFlagged) {
-            squares[i][j].element.classList.remove("bomb_hidden");
-            squares[i][j].element.classList.add("not_bomb");
-          }
-        }
-      }
-      return;
-    }
-
-    revealSquare(square);
-
-    if (numOfRevealed == 1) {
-      startTimer(gameEnded);
-    }
-
-    if (numOfRevealed == 1) {
-      const squareEmpty = document.querySelector(".field__empty");
-      const emptyRow = Number(squareEmpty.dataset.row);
-      const emptyCol = Number(squareEmpty.dataset.col);
-
-      let numMinesRemaining = numOfMines;
-      while (numMinesRemaining > 0) {
-        const row = Math.floor(Math.random() * numOfRows);
-        const col = Math.floor(Math.random() * numOfCols);
-        if (row !== emptyRow || col !== emptyCol) {
-          if (!squares[row][col].isMine) {
-            squares[row][col].isMine = true;
-            numMinesRemaining--;
-            squares[row][col].element.classList.add("bomb_hidden");
-          }
+    for (let i = 0; i < numOfRows; i++) {
+      for (let j = 0; j < numOfCols; j++) {
+        squares[i][j].element.style.pointerEvents = "none";
+        if (squares[i][j].isMine && !squares[i][j].isFlagged) {
+          squares[i][j].element.classList.remove("bomb_hidden");
+          squares[i][j].element.classList.remove("questioned");
+          squares[i][j].element.classList.add("bomb");
+        } else if (!squares[i][j].isMine && squares[i][j].isFlagged) {
+          squares[i][j].element.classList.remove("bomb_hidden");
+          squares[i][j].element.classList.add("not_bomb");
         }
       }
     }
+    return;
+  }
 
-    if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
-      for (let i = 0; i < numOfRows; i++) {
-        for (let j = 0; j < numOfCols; j++) {
-          squares[i][j].element.style.pointerEvents = "none";
+  revealSquare(square);
+
+  if (numOfRevealed == 1) {
+    startTimer();
+  }
+
+  if (numOfRevealed == 1) {
+    const squareEmpty = document.querySelector(".field__empty");
+    const emptyRow = Number(squareEmpty.dataset.row);
+    const emptyCol = Number(squareEmpty.dataset.col);
+
+    let numMinesRemaining = numOfMines;
+    while (numMinesRemaining > 0) {
+      const row = Math.floor(Math.random() * numOfRows);
+      const col = Math.floor(Math.random() * numOfCols);
+      if (row !== emptyRow || col !== emptyCol) {
+        if (!squares[row][col].isMine) {
+          squares[row][col].isMine = true;
+          numMinesRemaining--;
+          squares[row][col].element.classList.add("bomb_hidden");
         }
       }
-      emoticon.src = "images/emoticonsButtons/btnWin.png";
     }
+  }
+
+  if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
+    for (let i = 0; i < numOfRows; i++) {
+      for (let j = 0; j < numOfCols; j++) {
+        squares[i][j].element.style.pointerEvents = "none";
+      }
+    }
+    emoticon.src = "images/emoticonsButtons/btnWin.png";
   }
 }
 
@@ -160,8 +151,9 @@ function handleClick(event) {
 function handleRightClick(event) {
   if (numOfRevealed >= 1) {
     event.preventDefault();
-    if (gameEnded) return;
-
+    if (gameEnded) {
+      return;
+    }
     const row = event.target.dataset.row;
     const col = event.target.dataset.col;
     const square = squares[row][col];
@@ -232,7 +224,7 @@ let units = 0;
 let dozens = 0;
 let hundreds = 0;
 
-function startTimer(end) {
+function startTimer() {
   const timer = setInterval(() => {
     if ((hundreds == 9 && dozens == 9 && units == 9) || gameEnded) {
       clearInterval(timer);

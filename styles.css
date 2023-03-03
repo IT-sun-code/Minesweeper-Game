@@ -56,9 +56,6 @@ img {
 .game__emoticon_img {
   height: 52px;
 }
-.game__emoticon_img:hover {
-  cursor: pointer;
-}
 
 .game__field {
   display: grid;
@@ -80,6 +77,14 @@ img {
   cursor: pointer;
 }
 
+.flagged {
+  background-image: url("images/fieldCells/flag/flag.png")
+}
+
+.questioned {
+  background-image: url("images/fieldCells/questions/question.png")
+}
+
 .bomb {
   background-image: url("images/fieldCells/mines/mineOpened.png");
 }
@@ -96,18 +101,6 @@ img {
   background-image: url("images/fieldCells/mines/mineDecoy.png")
 }
 
-.flagged {
-  background-image: url("images/fieldCells/flag/flag.png")
-}
-
-.questioned {
-  background-image: url("images/fieldCells/questions/question.png")
-}
-
 .field__empty {
-  background-image: url("images/fieldCells/cells/cellEmpty.png")
-}
-
-.field__pressed {
   background-image: url("images/fieldCells/cells/cellEmpty.png")
 }

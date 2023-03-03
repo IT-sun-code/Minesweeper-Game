@@ -11,6 +11,98 @@ let counter = 40;
 let gameEnded = false;
 let hasWon = "";
 
+class Stack {
+  constructor() {
+    this.items = [];
+  }
+
+  // Push element onto stack
+  push(element) {
+    this.items.push(element);
+  }
+
+  // Pop element from stack
+  pop() {
+    if (this.items.length === 0) return "Underflow";
+    return this.items.pop();
+  }
+
+  // Get top element of stack
+  peek() {
+    return this.items[this.items.length - 1];
+  }
+
+  // Check if stack is empty
+  isEmpty() {
+    return this.items.length === 0;
+  }
+
+  // Get stack size
+  size() {
+    return this.items.length;
+  }
+
+  // Clear stack
+  clear() {
+    this.items = [];
+  }
+}
+
+function checkNear(row, col) {
+  let fillStack = new Stack();
+  fillStack.push([row, col]);
+
+  while (!fillStack.isEmpty()) {
+    // 1. Get position
+    let pos = fillStack.peek();
+    fillStack.pop();
+    // 2. Get row and col
+    let row_num = Number(pos[0]);
+    let col_num = Number(pos[1]);
+    // 2. Open Cell
+    openNearNumber(row_num, col_num);
+    // 3. Check near cell's
+    // Check rigth cell
+    if (row_num + 1 < 16) {
+      let sq_1 = squares[row_num + 1][col_num];
+      if (!sq_1.isMine && !sq_1.isRevealed)
+        fillStack.push([row_num + 1, col_num]);
+    }
+    // Check top cell
+    if (col_num + 1 < 16) {
+      let sq_2 = squares[row_num][col_num + 1];
+      if (!sq_2.isMine && !sq_2.isRevealed)
+        fillStack.push([row_num, col_num + 1]);
+    }
+    // Check left cell
+    if (row_num - 1 >= 0) {
+      let sq_3 = squares[row_num - 1][col_num];
+      if (!sq_3.isMine && !sq_3.isRevealed)
+        fillStack.push([row_num - 1, col_num]);
+    }
+    // Check bottom cell
+    if (col_num - 1 >= 0) {
+      let sq_4 = squares[row_num][col_num - 1];
+      if (!sq_4.isMine && !sq_4.isRevealed)
+        fillStack.push([row_num, col_num - 1]);
+    }
+  }
+}
+
+function openNearNumber(row, col) {
+  let square = squares[row][col];
+
+  if (!square.isRevealed) {
+    if (square.isDigit) {
+      square.element.classList.add("square_digit");
+      square.element.src = "";
+    } else square.element.classList.add("field__empty");
+
+    square.isRevealed = true;
+    numOfRevealed++;
+  }
+}
+
 // Create grid of squares_____________________________________________________
 function createBoard() {
   for (let i = 0; i < numOfRows; i++) {
@@ -137,7 +229,11 @@ function handleClick(event) {
         }
       }
 
+      checkNear(Number(row), Number(col));
+      console.log(numOfRevealed);
+
       if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
+        gameEnded = true;
         hasWon = true;
         gameOver();
       }

@@ -174,8 +174,13 @@ function revealSquare(square) {
 }
 
 function handlePress(event) {
-  if (event.button === 0) {
-    emoticon.src = "images/emoticonsButtons/btnScared.png";
+  if (
+    !event.target.classList.contains("flagged") &&
+    !event.target.classList.contains("questioned")
+  ) {
+    if (event.button === 0) {
+      emoticon.src = "images/emoticonsButtons/btnScared.png";
+    }
   }
 }
 

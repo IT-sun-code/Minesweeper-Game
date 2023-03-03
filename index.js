@@ -8,7 +8,7 @@ let numOfQuestioned = 0;
 let numOfRevealed = 0;
 let squares = [];
 let counter = 40;
-let gameEnded = false; // либо создать функцию, либо удалить
+let gameEnded = false;
 
 // Create grid of squares
 function createBoard() {
@@ -39,7 +39,6 @@ function handlePress(event) {
   if (event.button === 0) {
     emoticon.src = "images/emoticonsButtons/btnScared.png";
     event.target.classList.add("field__pressed");
-    console.log(event.target);
   }
 }
 
@@ -102,8 +101,6 @@ function handleClick(event) {
 
     if (square.isMine) {
       gameEnded = true;
-      // startTimer(gameEnded);
-
       emoticon.src = "images/emoticonsButtons/btnLose.png";
       square.element.classList.add("bomb__expoled");
 
@@ -235,9 +232,8 @@ let units = 0;
 let dozens = 0;
 let hundreds = 0;
 
-function startTimer(gameEnded) {
+function startTimer(end) {
   const timer = setInterval(() => {
-    console.log(gameEnded);
     if ((hundreds == 9 && dozens == 9 && units == 9) || gameEnded) {
       clearInterval(timer);
       return;

@@ -10,7 +10,6 @@ let squares = [];
 let counter = 40;
 let gameEnded = false;
 let hasWon = "";
-let timer = null;
 
 // создание стека_________________________________________________________________
 class Stack {
@@ -144,7 +143,6 @@ function createBoard() {
       square.addEventListener("mousedown", handlePress);
       square.addEventListener("mouseup", handleClick);
       square.addEventListener("contextmenu", handleRightClick);
-      document.addEventListener("mouseup", handleGlobalClick);
       gameField.appendChild(square);
       squares[i][j] = {
         element: square,
@@ -161,14 +159,15 @@ function createBoard() {
 
 // Подсчитать пустые клеточки________________________________________________________
 function revealSquare(square) {
-  if (square.isRevealed || square.isFlagged) return;
-
-  if (square.isDigit)
-    square.element.classList.add(`digit_${square.numOfNeighbouringMines}`);
-  else square.element.classList.add("field__empty");
-
+  if (square.isRevealed || square.isFlagged) {
+    return;
+  }
   square.isRevealed = true;
+  square.element.classList.add("field__empty");
   numOfRevealed++;
+  if (square.isDigit) {
+    square.element.classList.add(`digit_${square.numOfNeighbouringMines}`);
+  }
 }
 
 // Испуганный смайлик_________________________________________________________________
@@ -180,12 +179,6 @@ function handlePress(event) {
     if (event.button === 0) {
       emoticon.src = "images/emoticonsButtons/btnScared.png";
     }
-  }
-}
-
-function handleGlobalClick(event) {
-  if (event.button === 0 && !gameEnded) {
-    emoticon.src = "images/emoticonsButtons/btnRestart.png";
   }
 }
 
@@ -259,10 +252,6 @@ function handleClick(event) {
           }
         }
       }
-
-      if (square.isDigit)
-        square.element.classList.add(`digit_${square.numOfNeighbouringMines}`);
-
       if (!square.isDigit) {
         checkNear(Number(row), Number(col));
         console.log(numOfRevealed);
@@ -275,29 +264,6 @@ function handleClick(event) {
       }
     }
   }
-}
-
-function gameReset() {
-  // 1. Reset variables
-  counter = 40;
-  units = 0;
-  dozens = 0;
-  hundreds = 0;
-  numOfRevealed = 0;
-  // 2. Reset board
-  for (let i = 0; i < numOfRows; i++)
-    for (let j = 0; j < numOfCols; j++) squares[i][j].element.remove();
-  squares = [];
-  createBoard();
-  gameEnded = false;
-  // 3. Reset timer
-  timerUnits.src = `images/timerDigits/timerDigit_0.png`;
-  timerDozens.src = `images/timerDigits/timerDigit_0.png`;
-  timerHundreds.src = `images/timerDigits/timerDigit_0.png`;
-  clearInterval(timer);
-  // 4. Reset counter
-  counterUnits.src = `images/timerDigits/timerDigit_0.png`;
-  counterDozens.src = `images/timerDigits/timerDigit_4.png`;
 }
 
 // RIGHT_CLICK___________________________________________________________________________________________
@@ -378,7 +344,7 @@ let dozens = 0;
 let hundreds = 0;
 
 function startTimer() {
-  timer = setInterval(() => {
+  const timer = setInterval(() => {
     if ((hundreds == 9 && dozens == 9 && units == 9) || gameEnded) {
       clearInterval(timer);
       return;
@@ -411,9 +377,7 @@ function handlePushEmoticon(event) {
 emoticon.addEventListener("mouseup", handleResetEmoticon);
 function handleResetEmoticon(event) {
   if (event.button === 0) {
-    // location.reload(); // временный ресет
-    gameReset();
-    console.log("reset");
+    location.reload(); // временный ресет
   }
 }
 

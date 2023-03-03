@@ -104,3 +104,28 @@ img {
 .field__empty {
   background-image: url("images/fieldCells/cells/cellEmpty.png")
 }
+
+.digit_1 {
+  background-image: url("images/fieldCells/numberOfMines/numOfMines_1.png")
+}
+.digit_2 {
+  background-image: url("images/fieldCells/numberOfMines/numOfMines_2.png")
+}
+.digit_3 {
+  background-image: url("images/fieldCells/numberOfMines/numOfMines_3.png")
+}
+.digit_4 {
+  background-image: url("images/fieldCells/numberOfMines/numOfMines_4.png")
+}
+.digit_5 {
+  background-image: url("images/fieldCells/numberOfMines/numOfMines_5.png")
+}
+.digit_6 {
+  background-image: url("images/fieldCells/numberOfMines/numOfMines_6.png")
+}
+.digit_7 {
+  background-image: url("images/fieldCells/numberOfMines/numOfMines_7.png")
+}
+.digit_8 {
+  background-image: url("images/fieldCells/numberOfMines/numOfMines_8.png")
+}

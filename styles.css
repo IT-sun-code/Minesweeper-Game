@@ -30,6 +30,12 @@ list-style: none;
 display: flex;
 }
 
+button {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
 img {
   margin-bottom: -4px;
 }
@@ -60,12 +66,10 @@ img {
   grid-template-rows: repeat(16, 32px);
   width: 512px;
   height: 512;
-  /* border: 1px solid black; */
   margin: 0 auto;
   position: absolute;
   top: 103px;
   left: 19px; 
-  /* gap: 1px; */
 } 
 
 .square {
@@ -80,20 +84,8 @@ img {
   background-image: url("images/fieldCells/mines/mineOpened.png");
 }
 
-.flagged {
-  background-image: url("images/fieldCells/flag/flag.png")
-}
-
-.questioned {
-  background-image: url("images/fieldCells/questions/question.png")
-}
-
 .bomb__expoled {
   background-image: url("images/fieldCells/mines/mineExploded.png")
-}
-
-.field__empty {
-  background-image: url("images/fieldCells/cells/cellEmpty.png")
 }
 
 .bomb_hidden {
@@ -104,16 +96,18 @@ img {
   background-image: url("images/fieldCells/mines/mineDecoy.png")
 }
 
-/* .board {
-  display: grid;
-  grid-template-columns: repeat(10, 30px);
-  grid-template-rows: repeat(10, 30px);
-  gap: 1px;
+.flagged {
+  background-image: url("images/fieldCells/flag/flag.png")
 }
-.square {
-  background-color: grey;
-  border: 1px solid black;
-  font-size: 20px;
-  text-align: center;
-  user-select: none;
-} */
+
+.questioned {
+  background-image: url("images/fieldCells/questions/question.png")
+}
+
+.field__empty {
+  background-image: url("images/fieldCells/cells/cellEmpty.png")
+}
+
+.field__pressed {
+  background-image: url("images/fieldCells/cells/cellEmpty.png")
+}

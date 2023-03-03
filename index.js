@@ -101,7 +101,9 @@ function handleClick(event) {
     if (square.isFlagged || square.isQuestioned) return;
 
     if (square.isMine) {
-      gameEnded == true;
+      gameEnded = true;
+      // startTimer(gameEnded);
+
       emoticon.src = "images/emoticonsButtons/btnLose.png";
       square.element.classList.add("bomb__expoled");
 
@@ -259,13 +261,17 @@ function startTimer(gameEnded) {
 const emoticon = document.querySelector(".game__emoticon_img");
 
 emoticon.addEventListener("mousedown", handlePushEmoticon);
-function handlePushEmoticon() {
-  emoticon.src = "images/emoticonsButtons/btnRestartPressed.png";
+function handlePushEmoticon(event) {
+  if (event.button === 0) {
+    emoticon.src = "images/emoticonsButtons/btnRestartPressed.png";
+  }
 }
 
 emoticon.addEventListener("mouseup", handleResetEmoticon);
-function handleResetEmoticon() {
-  location.reload(); // временный ресет
+function handleResetEmoticon(event) {
+  if (event.button === 0) {
+    location.reload(); // временный ресет
+  }
 }
 
 createBoard();

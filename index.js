@@ -11,7 +11,7 @@ let counter = 40;
 let gameEnded = false;
 let hasWon = "";
 
-// Create grid of squares
+// Create grid of squares_____________________________________________________
 function createBoard() {
   for (let i = 0; i < numOfRows; i++) {
     squares[i] = [];
@@ -20,12 +20,14 @@ function createBoard() {
       square.className = "square";
       square.dataset.row = i;
       square.dataset.col = j;
-      square.addEventListener("click", handleClick);
+      square.addEventListener("mousedown", handlePress);
+      square.addEventListener("mouseup", handleClick);
       square.addEventListener("contextmenu", handleRightClick);
       gameField.appendChild(square);
       squares[i][j] = {
         element: square,
         isMine: false,
+        isDigit: false,
         isRevealed: false,
         isFlagged: false,
         isQuestioned: false,
@@ -49,6 +51,7 @@ function createBoard() {
           }
           if (squares[ni][nj].isMine) {
             squares[i][j].numOfNeighbouringMines++;
+            squares[i][j].isDigit = true;
           }
         }
       }
@@ -78,56 +81,66 @@ function revealSquare(square) {
   }
 }
 
+function handlePress(event) {
+  if (event.button === 0) {
+    emoticon.src = "images/emoticonsButtons/btnScared.png";
+  }
+}
+
 // По левому клику
 function handleClick(event) {
-  if (gameEnded) {
-    return;
-  }
+  if (event.button === 0) {
+    emoticon.src = "images/emoticonsButtons/btnRestart.png";
 
-  const row = event.target.dataset.row;
-  const col = event.target.dataset.col;
-  const square = squares[row][col];
-
-  if (square.isFlagged || square.isQuestioned) {
-    return;
-  }
-
-  if (square.isMine) {
-    hasWon = false;
-    gameEnded = true;
-    square.element.classList.add("bomb__expoled");
-    gameOver();
-  }
-
-  if (!gameEnded) {
-    revealSquare(square);
-
-    if (numOfRevealed == 1) {
-      startTimer();
+    if (gameEnded) {
+      return;
     }
 
-    if (numOfRevealed == 1) {
-      const squareEmpty = document.querySelector(".field__empty");
-      const emptyRow = Number(squareEmpty.dataset.row);
-      const emptyCol = Number(squareEmpty.dataset.col);
+    const row = event.target.dataset.row;
+    const col = event.target.dataset.col;
+    const square = squares[row][col];
 
-      let numMinesRemaining = numOfMines;
-      while (numMinesRemaining > 0) {
-        const row = Math.floor(Math.random() * numOfRows);
-        const col = Math.floor(Math.random() * numOfCols);
-        if (row !== emptyRow || col !== emptyCol) {
-          if (!squares[row][col].isMine) {
-            squares[row][col].isMine = true;
-            numMinesRemaining--;
-            squares[row][col].element.classList.add("bomb_hidden");
+    if (square.isFlagged || square.isQuestioned) {
+      return;
+    }
+
+    if (square.isMine) {
+      hasWon = false;
+      gameEnded = true;
+      square.element.classList.add("bomb__expoled");
+      gameOver();
+    }
+
+    if (!gameEnded) {
+      revealSquare(square);
+
+      if (numOfRevealed == 1) {
+        startTimer();
+      }
+
+      if (numOfRevealed == 1) {
+        const squareEmpty = document.querySelector(".field__empty");
+        const emptyRow = Number(squareEmpty.dataset.row);
+        const emptyCol = Number(squareEmpty.dataset.col);
+
+        let numMinesRemaining = numOfMines;
+        while (numMinesRemaining > 0) {
+          const row = Math.floor(Math.random() * numOfRows);
+          const col = Math.floor(Math.random() * numOfCols);
+          if (row !== emptyRow || col !== emptyCol) {
+            if (!squares[row][col].isMine) {
+              squares[row][col].isMine = true;
+              numMinesRemaining--;
+              squares[row][col].element.classList.add("bomb_hidden");
+            }
           }
         }
       }
-    }
 
-    if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
-      hasWon = true;
-      gameOver();
+      if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
+        hasWon = true;
+        gameOver();
+      }
     }
   }
 }

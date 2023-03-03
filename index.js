@@ -9,6 +9,7 @@ let numOfRevealed = 0;
 let squares = [];
 let counter = 40;
 let gameEnded = false;
+let hasWon = "";
 
 // Create grid of squares
 function createBoard() {
@@ -92,58 +93,42 @@ function handleClick(event) {
   }
 
   if (square.isMine) {
+    hasWon = false;
     gameEnded = true;
-    emoticon.src = "images/emoticonsButtons/btnLose.png";
     square.element.classList.add("bomb__expoled");
+    gameOver();
+  }
 
-    for (let i = 0; i < numOfRows; i++) {
-      for (let j = 0; j < numOfCols; j++) {
-        squares[i][j].element.style.pointerEvents = "none";
-        if (squares[i][j].isMine && !squares[i][j].isFlagged) {
-          squares[i][j].element.classList.remove("bomb_hidden");
-          squares[i][j].element.classList.remove("questioned");
-          squares[i][j].element.classList.add("bomb");
-        } else if (!squares[i][j].isMine && squares[i][j].isFlagged) {
-          squares[i][j].element.classList.remove("bomb_hidden");
-          squares[i][j].element.classList.add("not_bomb");
+  if (!gameEnded) {
+    revealSquare(square);
+
+    if (numOfRevealed == 1) {
+      startTimer();
+    }
+
+    if (numOfRevealed == 1) {
+      const squareEmpty = document.querySelector(".field__empty");
+      const emptyRow = Number(squareEmpty.dataset.row);
+      const emptyCol = Number(squareEmpty.dataset.col);
+
+      let numMinesRemaining = numOfMines;
+      while (numMinesRemaining > 0) {
+        const row = Math.floor(Math.random() * numOfRows);
+        const col = Math.floor(Math.random() * numOfCols);
+        if (row !== emptyRow || col !== emptyCol) {
+          if (!squares[row][col].isMine) {
+            squares[row][col].isMine = true;
+            numMinesRemaining--;
+            squares[row][col].element.classList.add("bomb_hidden");
+          }
         }
       }
     }
-    return;
-  }
 
-  revealSquare(square);
-
-  if (numOfRevealed == 1) {
-    startTimer();
-  }
-
-  if (numOfRevealed == 1) {
-    const squareEmpty = document.querySelector(".field__empty");
-    const emptyRow = Number(squareEmpty.dataset.row);
-    const emptyCol = Number(squareEmpty.dataset.col);
-
-    let numMinesRemaining = numOfMines;
-    while (numMinesRemaining > 0) {
-      const row = Math.floor(Math.random() * numOfRows);
-      const col = Math.floor(Math.random() * numOfCols);
-      if (row !== emptyRow || col !== emptyCol) {
-        if (!squares[row][col].isMine) {
-          squares[row][col].isMine = true;
-          numMinesRemaining--;
-          squares[row][col].element.classList.add("bomb_hidden");
-        }
-      }
+    if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
+      hasWon = true;
+      gameOver();
     }
-  }
-
-  if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
-    for (let i = 0; i < numOfRows; i++) {
-      for (let j = 0; j < numOfCols; j++) {
-        squares[i][j].element.style.pointerEvents = "none";
-      }
-    }
-    emoticon.src = "images/emoticonsButtons/btnWin.png";
   }
 }
 
@@ -259,6 +244,35 @@ emoticon.addEventListener("mouseup", handleResetEmoticon);
 function handleResetEmoticon(event) {
   if (event.button === 0) {
     location.reload(); // временный ресет
+  }
+}
+
+// GAME_OVER_____________________________________________________________________________________________
+function gameOver() {
+  if (hasWon) {
+    emoticon.src = "images/emoticonsButtons/btnWin.png";
+    for (let i = 0; i < numOfRows; i++) {
+      for (let j = 0; j < numOfCols; j++) {
+        squares[i][j].element.style.pointerEvents = "none";
+      }
+    }
+    console.log("ВЫИГРАЛ");
+  } else {
+    emoticon.src = "images/emoticonsButtons/btnLose.png";
+    console.log("ПРОИГРАЛИ");
+    for (let i = 0; i < numOfRows; i++) {
+      for (let j = 0; j < numOfCols; j++) {
+        squares[i][j].element.style.pointerEvents = "none";
+        if (squares[i][j].isMine && !squares[i][j].isFlagged) {
+          squares[i][j].element.classList.remove("bomb_hidden");
+          squares[i][j].element.classList.remove("questioned");
+          squares[i][j].element.classList.add("bomb");
+        } else if (!squares[i][j].isMine && squares[i][j].isFlagged) {
+          squares[i][j].element.classList.remove("bomb_hidden");
+          squares[i][j].element.classList.add("not_bomb");
+        }
+      }
+    }
   }
 }
 

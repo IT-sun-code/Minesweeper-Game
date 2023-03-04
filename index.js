@@ -65,7 +65,9 @@ function checkNear(row, col) {
     let row_num = Number(pos[0]);
     let col_num = Number(pos[1]);
     // 2.2 Открытая ячейка
-    openNearNumber(row_num, col_num);
+    let square = squares[row_num][col_num];
+    revealSquare(square);
+    // openNearNumber(row_num, col_num);//////////////////////////////////////////////////////////////////
     // 3. Проверка клеток рядом
     if (!squares[row_num][col_num].isDigit) {
       // Проверка правой клетки
@@ -121,18 +123,19 @@ function checkNear(row, col) {
 }
 
 // Открытие ближайших ячеек______________________________
-function openNearNumber(row, col) {
-  let square = squares[row][col];
+// function openNearNumber(row, col) {
+//   let square = squares[row][col];
 
-  if (!square.isRevealed) {
-    if (square.isDigit) {
-      square.element.classList.add(`digit_${square.numOfNeighbouringMines}`);
-    } else square.element.classList.add("field__empty");
+//   if (!square.isRevealed) {
+//     if (square.isDigit) {
+//       square.element.classList.add("digit");
+//       square.element.classList.add(`digit_${square.numOfNeighbouringMines}`);
+//     } else square.element.classList.add("field__empty");
 
-    square.isRevealed = true;
-    numOfRevealed++;
-  }
-}
+//     square.isRevealed = true;
+//     numOfRevealed++;
+//   }
+// }
 
 // Создание сетки клеток_________________________________
 function createBoard() {
@@ -178,7 +181,9 @@ function revealSquare(square) {
 function handlePress(event) {
   if (
     !event.target.classList.contains("flagged") &&
-    !event.target.classList.contains("questioned")
+    !event.target.classList.contains("questioned") &&
+    !event.target.classList.contains("field__empty") &&
+    !event.target.classList.contains("digit")
   ) {
     if (event.button === 0) {
       emoticon.src = "images/emoticonsButtons/btnScared.png";
@@ -226,18 +231,18 @@ function handleClick(event) {
     // Проверка, не окончена ли игра
     if (!gameEnded) {
       // Заполнение пустыми клетками
-      revealSquare(square);
+      // revealSquare(square);/////////////////////////////////////////////////////////////////////////
 
       // Запуск таймера
-      if (numOfRevealed == 1) {
+      if (numOfRevealed == 0) {
         startTimer();
-      }
 
-      // Генерация мин
-      if (numOfRevealed == 1) {
-        const squareEmpty = document.querySelector(".field__empty");
-        const emptyRow = Number(squareEmpty.dataset.row);
-        const emptyCol = Number(squareEmpty.dataset.col);
+        // Генерация мин
+        // const squareEmpty = document.querySelector(".field__empty");/////////////////////////////////
+        // const emptyRow = Number(squareEmpty.dataset.row);
+        // const emptyCol = Number(squareEmpty.dataset.col);
+        const emptyRow = row;
+        const emptyCol = col;
 
         let numMinesRemaining = numOfMines;
         while (numMinesRemaining > 0) {
@@ -282,6 +287,8 @@ function handleClick(event) {
       // Проверка соседних клеток
       if (!square.isDigit) {
         checkNear(Number(row), Number(col));
+      } else {
+        revealSquare(square);
       }
 
       // Проверка на победу в игре
@@ -405,6 +412,8 @@ function gameReset() {
   dozens = 0;
   hundreds = 0;
   numOfRevealed = 0;
+  numOfFlagged = 0;
+  numOfQuestioned = 0;
   seconds = 999;
   // 2. Сброс поля
   for (let i = 0; i < numOfRows; i++)
@@ -421,7 +430,9 @@ function gameReset() {
   counterUnits.src = `images/timerDigits/timerDigit_0.png`;
   counterDozens.src = `images/timerDigits/timerDigit_4.png`;
   // 5. Остановка звука конца игры
-  endGameSound.pause();
+  if (endGameSound) {
+    endGameSound.pause();
+  }
 }
 // 6. Поведение смайлика при нажатии и отжатии
 const emoticon = document.querySelector(".game__emoticon_img");
@@ -604,6 +615,15 @@ if (!playerName) {
 } else {
   userName.textContent = `${playerName.trim()},`;
 }
+
+//
+const menuItems = document.querySelectorAll(".menu__item");
+
+menuItems.forEach((item) => {
+  item.addEventListener("click", () => {
+    item.classList.toggle("active");
+  });
+});
 
 // Вызов игры____________________________________________
 createBoard();

@@ -6,6 +6,10 @@ user-select: none;
 font-family: 'Roboto', sans-serif;
 }
 
+nav {
+  background-color: #0077FF;
+}
+
 button {
   border: none;
   padding: 0;
@@ -34,12 +38,46 @@ li {
   text-align: center;
 }
 
+/* Стили для выпадающего списка правил */
+.menu {
+  position: relative;
+}
+
+.menu__item {
+  display: block;
+  padding: 20px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 3;
+  background-color: #fff;
+  padding: 20px;
+  margin: 0;
+}
+
+.submenu li {
+  list-style: none;
+  font-size: 16px;
+  padding: 10px;
+}
+
+.menu__item.active + .submenu {
+  display: block;
+}
+
 /* Стили для верхней части игрового пространтсва */
 .game__top_bar{
   position: absolute;
   top: 19px;
   left: 19px;
-  z-index: 2; 
+  z-index: 1; 
   width: 511px;
   height: 64;
   display: flex;
@@ -132,6 +170,10 @@ li {
 }
 
 /* Стили для открытых клеток с цифрами по количеству ближайших мин*/
+.digit{
+  background-image: none;
+}
+
 .digit_1 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_1.png")
 }

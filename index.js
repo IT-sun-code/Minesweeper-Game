@@ -1,3 +1,4 @@
+// Получение поля и создание констант____________________
 const gameField = document.querySelector(".game__field");
 
 const numOfCols = 16;
@@ -12,103 +13,103 @@ let gameEnded = false;
 let hasWon = "";
 let timer = null;
 
-// создание стека_________________________________________________________________
+// Создание стека________________________________________
 class Stack {
   constructor() {
     this.items = [];
   }
 
-  // Push element onto stack
+  // Помещение элемента в стек
   push(element) {
     this.items.push(element);
   }
 
-  // Pop element from stack
+  // Извлечение элемента из стека
   pop() {
     if (this.items.length === 0) return "Underflow";
     return this.items.pop();
   }
 
-  // Get top element of stack
+  // Получение верхнего элемента стека
   peek() {
     return this.items[this.items.length - 1];
   }
 
-  // Check if stack is empty
+  // Проверка, пуст ли стек
   isEmpty() {
     return this.items.length === 0;
   }
 
-  // Get stack size
+  // Получение размера стека
   size() {
     return this.items.length;
   }
 
-  // Clear stack
+  // Очищение стека
   clear() {
     this.items = [];
   }
 }
 
-// Проверка ближайших клеток_________________________________________________________________
+// Проверка ближайших клеток_____________________________
 function checkNear(row, col) {
   let fillStack = new Stack();
   fillStack.push([row, col]);
 
   while (!fillStack.isEmpty()) {
-    // 1. Get position
+    // 1. Получение позиции
     let pos = fillStack.peek();
     fillStack.pop();
-    // 2. Get row and col
+    // 2.1 Получение строки и столбца
     let row_num = Number(pos[0]);
     let col_num = Number(pos[1]);
-    // 2. Open Cell
+    // 2.2 Открытая ячейка
     openNearNumber(row_num, col_num);
-    // 3. Check near cell's
+    // 3. Проверка клеток рядом
     if (!squares[row_num][col_num].isDigit) {
-      // Check rigth cell
+      // Проверка правой клетки
       if (row_num + 1 < 16) {
         let sq_1 = squares[row_num + 1][col_num];
         if (!sq_1.isMine && !sq_1.isRevealed)
           fillStack.push([row_num + 1, col_num]);
       }
-      // Check top cell
+      // Проверка верхней клетки
       if (col_num + 1 < 16) {
         let sq_2 = squares[row_num][col_num + 1];
         if (!sq_2.isMine && !sq_2.isRevealed)
           fillStack.push([row_num, col_num + 1]);
       }
-      // Check left cell
+      // Проверка левой клетки
       if (row_num - 1 >= 0) {
         let sq_3 = squares[row_num - 1][col_num];
         if (!sq_3.isMine && !sq_3.isRevealed)
           fillStack.push([row_num - 1, col_num]);
       }
-      // Check bottom cell
+      // Проверка нижней клетки
       if (col_num - 1 >= 0) {
         let sq_4 = squares[row_num][col_num - 1];
         if (!sq_4.isMine && !sq_4.isRevealed)
           fillStack.push([row_num, col_num - 1]);
       }
-      // Check left bottom cell
+      // Проверка нижней левой клетки
       if (col_num - 1 >= 0 && row_num - 1 >= 0) {
         let sq_4 = squares[row_num - 1][col_num - 1];
         if (!sq_4.isMine && !sq_4.isRevealed)
           fillStack.push([row_num - 1, col_num - 1]);
       }
-      // Check right bottom cell
+      // Проверка нижней правой клетки
       if (col_num - 1 >= 0 && row_num + 1 < 16) {
         let sq_4 = squares[row_num + 1][col_num - 1];
         if (!sq_4.isMine && !sq_4.isRevealed)
           fillStack.push([row_num + 1, col_num - 1]);
       }
-      // Check left top cell
+      // Проверка левой верхней клетки
       if (col_num + 1 < 16 && row_num - 1 >= 0) {
         let sq_4 = squares[row_num - 1][col_num + 1];
         if (!sq_4.isMine && !sq_4.isRevealed)
           fillStack.push([row_num - 1, col_num + 1]);
       }
-      // Check right top cell
+      // Проверка правой верхней клетки
       if (col_num + 1 < 16 && row_num + 1 < 16) {
         let sq_4 = squares[row_num + 1][col_num + 1];
         if (!sq_4.isMine && !sq_4.isRevealed)
@@ -118,7 +119,7 @@ function checkNear(row, col) {
   }
 }
 
-// Открытие ближайших ячеек_________________________________________________________________
+// Открытие ближайших ячеек______________________________
 function openNearNumber(row, col) {
   let square = squares[row][col];
 
@@ -132,7 +133,7 @@ function openNearNumber(row, col) {
   }
 }
 
-// Create grid of squares_____________________________________________________
+// Создание сетки клеток_________________________________
 function createBoard() {
   for (let i = 0; i < numOfRows; i++) {
     squares[i] = [];
@@ -159,7 +160,7 @@ function createBoard() {
   }
 }
 
-// Подсчитать пустые клеточки________________________________________________________
+// Подсчет пустых клеток_________________________________
 function revealSquare(square) {
   if (square.isRevealed || square.isFlagged) return;
 
@@ -171,7 +172,7 @@ function revealSquare(square) {
   numOfRevealed++;
 }
 
-// Испуганный смайлик_________________________________________________________________
+// Изменение смайлика при зажатии клетки поля____________
 function handlePress(event) {
   if (
     !event.target.classList.contains("flagged") &&
@@ -183,13 +184,15 @@ function handlePress(event) {
   }
 }
 
+// Изменение поведения смайлика в случае наведения мыши__
+// за пределы поля_______________________________________
 function handleGlobalClick(event) {
   if (event.button === 0 && !gameEnded) {
     emoticon.src = "images/emoticonsButtons/btnRestart.png";
   }
 }
 
-// По левому клику_________________________________________________________________
+// Поведение различных элементов игры по левому клику____
 function handleClick(event) {
   if (event.button === 0) {
     emoticon.src = "images/emoticonsButtons/btnRestart.png";
@@ -213,13 +216,17 @@ function handleClick(event) {
       gameOver();
     }
 
+    // Проверка, не окончена ли игра
     if (!gameEnded) {
+      // Заполнение пустыми клетками
       revealSquare(square);
 
+      // Запуск таймера
       if (numOfRevealed == 1) {
         startTimer();
       }
 
+      // Генерация мин
       if (numOfRevealed == 1) {
         const squareEmpty = document.querySelector(".field__empty");
         const emptyRow = Number(squareEmpty.dataset.row);
@@ -237,7 +244,8 @@ function handleClick(event) {
             }
           }
         }
-        // Calculate number of neighbouring mines for each square___________________
+
+        // Подсчет количества ближайших мин для каждой клетки
         for (let i = 0; i < numOfRows; i++) {
           for (let j = 0; j < numOfCols; j++) {
             if (squares[i][j].isMine) {
@@ -260,14 +268,16 @@ function handleClick(event) {
         }
       }
 
+      // Добавление цифр количества мин поблизости для открытых клеток
       if (square.isDigit)
         square.element.classList.add(`digit_${square.numOfNeighbouringMines}`);
 
+      // Проверка соседних клеток
       if (!square.isDigit) {
         checkNear(Number(row), Number(col));
-        console.log(numOfRevealed);
       }
 
+      // Проверка на победу в игре
       if (numOfRevealed === numOfRows * numOfCols - numOfMines) {
         gameEnded = true;
         hasWon = true;
@@ -277,30 +287,7 @@ function handleClick(event) {
   }
 }
 
-function gameReset() {
-  // 1. Reset variables
-  counter = 40;
-  units = 0;
-  dozens = 0;
-  hundreds = 0;
-  numOfRevealed = 0;
-  // 2. Reset board
-  for (let i = 0; i < numOfRows; i++)
-    for (let j = 0; j < numOfCols; j++) squares[i][j].element.remove();
-  squares = [];
-  createBoard();
-  gameEnded = false;
-  // 3. Reset timer
-  timerUnits.src = `images/timerDigits/timerDigit_0.png`;
-  timerDozens.src = `images/timerDigits/timerDigit_0.png`;
-  timerHundreds.src = `images/timerDigits/timerDigit_0.png`;
-  clearInterval(timer);
-  // 4. Reset counter
-  counterUnits.src = `images/timerDigits/timerDigit_0.png`;
-  counterDozens.src = `images/timerDigits/timerDigit_4.png`;
-}
-
-// RIGHT_CLICK___________________________________________________________________________________________
+// Поведение различных элементов игры по правому клику___
 function handleRightClick(event) {
   if (numOfRevealed >= 1) {
     event.preventDefault();
@@ -342,7 +329,7 @@ function handleRightClick(event) {
   }
 }
 
-// START_COUNTER___________________________________________________________________________________________
+// Подсчет мин___________________________________________
 const counterDigits = document.querySelectorAll(".game__counter_img");
 counterDigits.forEach((image, index) => {
   image.dataset.id = index;
@@ -363,7 +350,7 @@ function setCounter() {
   counterDozens.src = `images/timerDigits/timerDigit_${numOfDozens}.png`;
 }
 
-// START_TIMER___________________________________________________________________________________________
+// Реализация таймера____________________________________
 const timerDigits = document.querySelectorAll(".game__timer_img");
 timerDigits.forEach((image, index) => {
   image.dataset.id = index + 3;
@@ -398,7 +385,30 @@ function startTimer() {
   }, 1000);
 }
 
-// GAME RESET___________________________________________________________________________________________
+// Перезагрузка игры_____________________________________
+function gameReset() {
+  // 1. Сброс переменных
+  counter = 40;
+  units = 0;
+  dozens = 0;
+  hundreds = 0;
+  numOfRevealed = 0;
+  // 2. Сброс поля
+  for (let i = 0; i < numOfRows; i++)
+    for (let j = 0; j < numOfCols; j++) squares[i][j].element.remove();
+  squares = [];
+  createBoard();
+  gameEnded = false;
+  // 3. Сброс таймера
+  timerUnits.src = `images/timerDigits/timerDigit_0.png`;
+  timerDozens.src = `images/timerDigits/timerDigit_0.png`;
+  timerHundreds.src = `images/timerDigits/timerDigit_0.png`;
+  clearInterval(timer);
+  // 4. Сброс счетчика мин
+  counterUnits.src = `images/timerDigits/timerDigit_0.png`;
+  counterDozens.src = `images/timerDigits/timerDigit_4.png`;
+}
+// 5. Поведение смайлика при нажатии и отжатии
 const emoticon = document.querySelector(".game__emoticon_img");
 
 emoticon.addEventListener("mousedown", handlePushEmoticon);
@@ -411,13 +421,11 @@ function handlePushEmoticon(event) {
 emoticon.addEventListener("mouseup", handleResetEmoticon);
 function handleResetEmoticon(event) {
   if (event.button === 0) {
-    // location.reload(); // временный ресет
     gameReset();
-    console.log("reset");
   }
 }
 
-// GAME_OVER_____________________________________________________________________________________________
+// Конец игры____________________________________________
 function gameOver() {
   if (hasWon) {
     emoticon.src = "images/emoticonsButtons/btnWin.png";
@@ -446,4 +454,5 @@ function gameOver() {
   }
 }
 
+// Вызов игры____________________________________________
 createBoard();

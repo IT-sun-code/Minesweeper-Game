@@ -1,7 +1,31 @@
+/* Общие стили */
+body {
+user-select: none;
+}
+
+button {
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+}
+
+img {
+  margin-bottom: -4px;
+}
+
+/* Стиль для контейнера */
 .container {
   text-align: center;
 }
 
+/* Стили для верхней части игрового пространтсва */
 .game__top_bar{
   position: absolute;
   top: 19px;
@@ -23,29 +47,11 @@
   padding-right: 12px;
 }
 
-ul {
-margin: 0;
-padding: 0;
-list-style: none;
-display: flex;
-}
-
-button {
-  border: none;
-  padding: 0;
-  cursor: pointer;
-}
-
-img {
-  margin-bottom: -4px;
-}
-
 .game__img {
   width: 556px;
   height: 640;
   position: relative;
   margin: 0 auto;
-  user-select: none;
 }
 
 .game__time_img {
@@ -57,6 +63,7 @@ img {
   height: 52px;
 }
 
+/* Стили для игрового поля */
 .game__field {
   display: grid;
   grid-template-columns: repeat(16, 32px);
@@ -69,6 +76,7 @@ img {
   left: 19px; 
 } 
 
+/* Стили для клеток поля по умолчанию */
 .square {
   background-image: url("./images/fieldCells/cells/cellUndiscovered.png");
 }
@@ -77,6 +85,7 @@ img {
   cursor: pointer;
 }
 
+/* Стили для клеток поля по правому клику мышкой */
 .flagged {
   background-image: url("images/fieldCells/flag/flag.png")
 }
@@ -85,18 +94,20 @@ img {
   background-image: url("images/fieldCells/questions/question.png")
 }
 
+/* Стили для клеток поля с бомбами */
 .bomb {
   background-image: url("images/fieldCells/mines/mineOpened.png");
-}
-
-.bomb__expoled {
-  background-image: url("images/fieldCells/mines/mineExploded.png")
 }
 
 .bomb_hidden {
   background-image: url("images/fieldCells/cells/cellUndiscovered.png");
 }
 
+.bomb__expoled {
+  background-image: url("images/fieldCells/mines/mineExploded.png")
+}
+
+/* Стили для открытых клеток */
 .not_bomb {
   background-image: url("images/fieldCells/mines/mineDecoy.png")
 }
@@ -105,27 +116,35 @@ img {
   background-image: url("images/fieldCells/cells/cellEmpty.png")
 }
 
+/* Стили для открытых клеток с цифрами по количеству ближайших мин*/
 .digit_1 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_1.png")
 }
+
 .digit_2 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_2.png")
 }
+
 .digit_3 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_3.png")
 }
+
 .digit_4 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_4.png")
 }
+
 .digit_5 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_5.png")
 }
+
 .digit_6 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_6.png")
 }
+
 .digit_7 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_7.png")
 }
+
 .digit_8 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_8.png")
 }

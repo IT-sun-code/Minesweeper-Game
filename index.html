@@ -20,7 +20,9 @@
   <body>
     <div class="container">
       <!-- Приветствие -->
-      <header><h1>Добро пожаловать в игру Сапер!</h1></header>
+      <header>
+        <h1><span id="user_name"></span> добро пожаловать в игру Сапер!</h1>
+      </header>
 
       <main>
         <div class="game">
@@ -103,10 +105,10 @@
       <footer>
         <h2>
           <ul class="final_points">
-            <li>ВСЕГО ИГР:<span id="total_games"></span></li>
-            <li>ПОБЕДЫ: <span id="wins"></span></li>
-            <li>ПОРАЖЕНИЯ:<span id="losses"></span></li>
-            <li>САМАЯ БЫСТРАЯ ПОБЕДА:<span id="fastest_game"></span></li>
+            <li>ВСЕГО ИГР:<span id="total_games"> ?</span></li>
+            <li>ПОБЕДЫ: <span id="wins"> ?</span></li>
+            <li>ПОРАЖЕНИЯ:<span id="losses"> ?</span></li>
+            <li>САМАЯ БЫСТРАЯ ПОБЕДА:<span id="fastest_game"> ?</span></li>
             <li><button class="reset_results">ОБНУЛИТЬ</button></li>
             <!-- localStorage.clear() добавить через джс-->
           </ul>

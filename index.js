@@ -591,11 +591,19 @@ function setFinalPoints() {
 const resetResultsBtn = document.querySelector(".reset_results");
 resetResultsBtn.addEventListener("click", function () {
   localStorage.clear();
-  totalGamesElement.textContent = ` 0`;
-  winsElement.textContent = ` 0`;
-  lossesElement.textContent = ` 0`;
-  fastestGameElement.textContent = ` 0`;
+  totalGamesElement.textContent = " 0";
+  winsElement.textContent = " 0";
+  lossesElement.textContent = " 0";
+  fastestGameElement.textContent = " 0";
 });
+
+const playerName = prompt("Как вас зовут?");
+const userName = document.getElementById("user_name");
+if (!playerName) {
+  userName.textContent = "Игрок,";
+} else {
+  userName.textContent = `${playerName.trim()},`;
+}
 
 // Вызов игры____________________________________________
 createBoard();

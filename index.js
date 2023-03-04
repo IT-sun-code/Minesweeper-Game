@@ -388,7 +388,7 @@ function startTimer() {
       ++hundreds;
       dozens = 0;
     }
-    seconds--; ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    seconds--;
     timerUnits.src = `images/timerDigits/timerDigit_${units}.png`;
     timerDozens.src = `images/timerDigits/timerDigit_${dozens}.png`;
     timerHundreds.src = `images/timerDigits/timerDigit_${hundreds}.png`;
@@ -552,7 +552,6 @@ const fastestGameElement = document.getElementById("fastest_game");
 
 function setFinalPoints() {
   let finalPoints = JSON.parse(localStorage.getItem("finalPoints"));
-  // Check if finalPoints is null or undefined
   if (!finalPoints) {
     finalPoints = {
       totalGames: 0,
@@ -587,7 +586,7 @@ function setFinalPoints() {
   localStorage.setItem("finalPoints", JSON.stringify(finalPoints));
 }
 
-// Очищение localStorage
+// Очищение localStorage________________________________
 const resetResultsBtn = document.querySelector(".reset_results");
 resetResultsBtn.addEventListener("click", function () {
   localStorage.clear();
@@ -597,6 +596,7 @@ resetResultsBtn.addEventListener("click", function () {
   fastestGameElement.textContent = " 0";
 });
 
+// Запрос имени пользователя_____________________________
 const playerName = prompt("Как вас зовут?");
 const userName = document.getElementById("user_name");
 if (!playerName) {

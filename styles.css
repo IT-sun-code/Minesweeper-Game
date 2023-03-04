@@ -12,6 +12,10 @@ button {
   cursor: pointer;
 }
 
+span {
+  color:#0077FF;
+}
+
 img {
   margin-bottom: -4px;
 }
@@ -183,8 +187,4 @@ li {
 
 .reset_results:active {
   background-color: #000000;
-}
-
-#user_name {
-  color:#0077FF;
 }

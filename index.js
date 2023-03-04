@@ -12,6 +12,7 @@ let counter = 40;
 let gameEnded = false;
 let hasWon = "";
 let timer = null;
+let seconds = 999;
 
 // Создание стека________________________________________
 class Stack {
@@ -387,6 +388,7 @@ function startTimer() {
       ++hundreds;
       dozens = 0;
     }
+    seconds--; ///////////////////////////////////////////////////////////////////////////////////////////////////////
     timerUnits.src = `images/timerDigits/timerDigit_${units}.png`;
     timerDozens.src = `images/timerDigits/timerDigit_${dozens}.png`;
     timerHundreds.src = `images/timerDigits/timerDigit_${hundreds}.png`;
@@ -403,6 +405,7 @@ function gameReset() {
   dozens = 0;
   hundreds = 0;
   numOfRevealed = 0;
+  seconds = 999;
   // 2. Сброс поля
   for (let i = 0; i < numOfRows; i++)
     for (let j = 0; j < numOfCols; j++) squares[i][j].element.remove();
@@ -420,7 +423,7 @@ function gameReset() {
   // 5. Остановка звука конца игры
   endGameSound.pause();
 }
-// 5. Поведение смайлика при нажатии и отжатии
+// 6. Поведение смайлика при нажатии и отжатии
 const emoticon = document.querySelector(".game__emoticon_img");
 
 emoticon.addEventListener("mousedown", handlePushEmoticon);
@@ -478,6 +481,7 @@ function gameOver() {
       }
     }
   }
+  setFinalPoints();
 }
 
 // Кастомное модальное окно______________________________
@@ -538,6 +542,60 @@ function showResult() {
     }, 100);
   }, 500);
 }
+
+// Занесение и получение итоговых очков пользователя_____
+// за все игры___________________________________________
+const totalGamesElement = document.getElementById("total_games");
+const winsElement = document.getElementById("wins");
+const lossesElement = document.getElementById("losses");
+const fastestGameElement = document.getElementById("fastest_game");
+
+function setFinalPoints() {
+  let finalPoints = JSON.parse(localStorage.getItem("finalPoints"));
+  // Check if finalPoints is null or undefined
+  if (!finalPoints) {
+    finalPoints = {
+      totalGames: 0,
+      wins: 0,
+      losses: 0,
+      fastestGame: 0,
+    };
+  }
+
+  if (gameEnded) {
+    finalPoints.totalGames++;
+  }
+  if (hasWon) {
+    finalPoints.wins++;
+    if (
+      finalPoints.fastestGame !== 0 &&
+      finalPoints.fastestGame < 999 - seconds
+    ) {
+      return;
+    } else {
+      finalPoints.fastestGame = 999 - seconds;
+    }
+  } else {
+    finalPoints.losses++;
+  }
+
+  totalGamesElement.textContent = ` ${finalPoints.totalGames}`;
+  winsElement.textContent = ` ${finalPoints.wins}`;
+  lossesElement.textContent = ` ${finalPoints.losses}`;
+  fastestGameElement.textContent = ` ${finalPoints.fastestGame}`;
+
+  localStorage.setItem("finalPoints", JSON.stringify(finalPoints));
+}
+
+// Очищение localStorage
+const resetResultsBtn = document.querySelector(".reset_results");
+resetResultsBtn.addEventListener("click", function () {
+  localStorage.clear();
+  totalGamesElement.textContent = ` 0`;
+  winsElement.textContent = ` 0`;
+  lossesElement.textContent = ` 0`;
+  fastestGameElement.textContent = ` 0`;
+});
 
 // Вызов игры____________________________________________
 createBoard();

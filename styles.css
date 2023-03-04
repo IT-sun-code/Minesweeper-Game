@@ -12,15 +12,17 @@ button {
   cursor: pointer;
 }
 
-ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: flex;
-}
-
 img {
   margin-bottom: -4px;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  text-align: left;
+  padding-bottom: 5px;
 }
 
 /* Стиль для контейнера */
@@ -40,6 +42,12 @@ img {
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
+}
+
+.game__time ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
 }
 
 .game__counter {
@@ -150,4 +158,29 @@ img {
 
 .digit_8 {
   background-image: url("images/fieldCells/numberOfMines/numOfMines_8.png")
+}
+
+/* Стили для итоговых очков пользователя */
+.final_points {
+  width: 556px;
+  padding: 0;
+  margin: auto;
+}
+
+/* Стили для кнопки сброса результатов пользователя */
+.reset_results {
+  color: #FFFFFF;
+  background-color: #0077FF;
+  font-size: inherit;
+  padding: 15px 30px;
+  margin-top: 10px;
+  border-radius: 15px;
+}
+
+.reset_results:hover {
+  opacity: 80%;
+}
+
+.reset_results:active {
+  background-color: #000000;
 }

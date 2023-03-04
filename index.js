@@ -300,12 +300,12 @@ function handleRightClick(event) {
     if (gameEnded) {
       return;
     }
-    const markSound = new Audio("sounds/mark_flag_or_question.mp3");
-    markSound.play();
     const row = event.target.dataset.row;
     const col = event.target.dataset.col;
     const square = squares[row][col];
     if (!square.isRevealed && numOfFlagged != 40) {
+      const markSound = new Audio("sounds/mark_flag_or_question.mp3");
+      markSound.play();
       if (square.isFlagged) {
         square.isFlagged = false;
         square.element.classList.remove("flagged");
@@ -417,6 +417,8 @@ function gameReset() {
   // 4. Сброс счетчика мин
   counterUnits.src = `images/timerDigits/timerDigit_0.png`;
   counterDozens.src = `images/timerDigits/timerDigit_4.png`;
+  // 5. Остановка звука конца игры
+  endGameSound.pause();
 }
 // 5. Поведение смайлика при нажатии и отжатии
 const emoticon = document.querySelector(".game__emoticon_img");
@@ -436,23 +438,31 @@ function handleResetEmoticon(event) {
 }
 
 // Конец игры____________________________________________
+let endGameSound;
+
+function toggleSound() {
+  if (endGameSound.paused) {
+    endGameSound.play();
+  } else {
+    endGameSound.pause();
+  }
+}
+
 function gameOver() {
   if (hasWon) {
-    const winSound = new Audio("sounds/win_sound.mp3");
-    winSound.play();
+    endGameSound = new Audio("sounds/win_sound.mp3");
     emoticon.src = "images/emoticonsButtons/btnWin.png";
     for (let i = 0; i < numOfRows; i++) {
       for (let j = 0; j < numOfCols; j++) {
         squares[i][j].element.style.pointerEvents = "none";
       }
     }
-    console.log("ВЫИГРАЛ");
     showResult();
+    toggleSound();
   } else {
-    const explosionSound = new Audio("sounds/bomb_exploded.mp3");
-    explosionSound.play();
+    endGameSound = new Audio("sounds/bomb_exploded.mp3");
+    endGameSound.play();
     emoticon.src = "images/emoticonsButtons/btnLose.png";
-    console.log("ПРОИГРАЛИ");
     showResult();
     for (let i = 0; i < numOfRows; i++) {
       for (let j = 0; j < numOfCols; j++) {
@@ -470,7 +480,7 @@ function gameOver() {
   }
 }
 
-// Кастомный алерт_______________________________________
+// Кастомное модальное окно______________________________
 function showResult() {
   setTimeout(function () {
     var resultModal = document.createElement("div");
@@ -516,7 +526,7 @@ function showResult() {
       resultModal.style.opacity = "0";
       setTimeout(function () {
         document.body.removeChild(resultModal);
-      }, 500);
+      }, 300);
     });
 
     resultModal.appendChild(resultText);
@@ -526,7 +536,7 @@ function showResult() {
     setTimeout(function () {
       resultModal.style.opacity = "1";
     }, 100);
-  }, 1000);
+  }, 500);
 }
 
 // Вызов игры____________________________________________

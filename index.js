@@ -164,9 +164,10 @@ function createBoard() {
 function revealSquare(square) {
   if (square.isRevealed || square.isFlagged) return;
 
-  if (square.isDigit)
+  if (square.isDigit) {
+    square.element.classList.add("digit");
     square.element.classList.add(`digit_${square.numOfNeighbouringMines}`);
-  else square.element.classList.add("field__empty");
+  } else square.element.classList.add("field__empty");
 
   square.isRevealed = true;
   numOfRevealed++;
@@ -299,6 +300,8 @@ function handleRightClick(event) {
     if (gameEnded) {
       return;
     }
+    const markSound = new Audio("sounds/mark_flag_or_question.mp3");
+    markSound.play();
     const row = event.target.dataset.row;
     const col = event.target.dataset.col;
     const square = squares[row][col];
@@ -387,6 +390,8 @@ function startTimer() {
     timerUnits.src = `images/timerDigits/timerDigit_${units}.png`;
     timerDozens.src = `images/timerDigits/timerDigit_${dozens}.png`;
     timerHundreds.src = `images/timerDigits/timerDigit_${hundreds}.png`;
+    const tickingSound = new Audio("sounds/timer_ticking.mp3");
+    tickingSound.play();
   }, 1000);
 }
 
@@ -433,6 +438,8 @@ function handleResetEmoticon(event) {
 // Конец игры____________________________________________
 function gameOver() {
   if (hasWon) {
+    const winSound = new Audio("sounds/win_sound.mp3");
+    winSound.play();
     emoticon.src = "images/emoticonsButtons/btnWin.png";
     for (let i = 0; i < numOfRows; i++) {
       for (let j = 0; j < numOfCols; j++) {
@@ -440,9 +447,13 @@ function gameOver() {
       }
     }
     console.log("ВЫИГРАЛ");
+    showResult();
   } else {
+    const explosionSound = new Audio("sounds/bomb_exploded.mp3");
+    explosionSound.play();
     emoticon.src = "images/emoticonsButtons/btnLose.png";
     console.log("ПРОИГРАЛИ");
+    showResult();
     for (let i = 0; i < numOfRows; i++) {
       for (let j = 0; j < numOfCols; j++) {
         squares[i][j].element.style.pointerEvents = "none";
@@ -457,6 +468,65 @@ function gameOver() {
       }
     }
   }
+}
+
+// Кастомный алерт_______________________________________
+function showResult() {
+  setTimeout(function () {
+    var resultModal = document.createElement("div");
+    resultModal.style.position = "fixed";
+    resultModal.style.top = "0";
+    resultModal.style.left = "0";
+    resultModal.style.width = "100%";
+    resultModal.style.height = "100%";
+    resultModal.style.backgroundColor = "rgba(0, 0, 0, 0)";
+    resultModal.style.opacity = "0";
+    resultModal.style.display = "flex";
+    resultModal.style.justifyContent = "center";
+    resultModal.style.alignItems = "center";
+    resultModal.style.zIndex = "999";
+    resultModal.style.transition =
+      "background-color 0.5s ease, opacity 0.5s ease";
+
+    const resultText = document.createElement("h1");
+    resultText.style.color = "#fff";
+    resultText.style.fontSize = "5rem";
+    resultText.style.textAlign = "center";
+
+    if (hasWon) {
+      resultText.textContent = "Поздравляем, ты победил!!! :)";
+      resultModal.style.backgroundColor = "rgba(0, 128, 0, 0.5)";
+    } else {
+      resultText.textContent = "Ты проиграл, попробуй еще раз!";
+      resultModal.style.backgroundColor = "rgba(255, 0, 0, 0.5)";
+    }
+
+    const closeButton = document.createElement("button");
+    closeButton.style.position = "absolute";
+    closeButton.style.top = "0";
+    closeButton.style.right = "0";
+    closeButton.style.backgroundColor = "transparent";
+    closeButton.style.border = "none";
+    closeButton.style.color = "#fff";
+    closeButton.style.fontSize = "2rem";
+    closeButton.style.padding = "1rem";
+    closeButton.style.cursor = "pointer";
+    closeButton.innerHTML = "&times;";
+    closeButton.addEventListener("click", function () {
+      resultModal.style.opacity = "0";
+      setTimeout(function () {
+        document.body.removeChild(resultModal);
+      }, 500);
+    });
+
+    resultModal.appendChild(resultText);
+    resultModal.appendChild(closeButton);
+    document.body.appendChild(resultModal);
+
+    setTimeout(function () {
+      resultModal.style.opacity = "1";
+    }, 100);
+  }, 1000);
 }
 
 // Вызов игры____________________________________________

@@ -20,10 +20,6 @@ span {
   color:#0077FF;
 }
 
-img {
-  margin-bottom: -4px;
-}
-
 ul {
   list-style: none;
 }
@@ -49,6 +45,11 @@ li {
   color: #fff;
   font-size: 16px;
   cursor: pointer;
+  transition-duration: .5s;
+}
+
+.menu__item:hover {
+  opacity: 80%;
 }
 
 .submenu {
@@ -63,13 +64,17 @@ li {
 }
 
 .submenu li {
-  list-style: none;
   font-size: 16px;
   padding: 10px;
 }
 
 .menu__item.active + .submenu {
   display: block;
+}
+
+.game {
+  width: 556px;
+  margin: auto;
 }
 
 /* Стили для верхней части игрового пространтсва */
@@ -109,11 +114,16 @@ li {
 
 .game__time_img {
   height: 46px;
-  padding: 8px 0 10px 0;
+  padding: 9px 0 10px 0;
+}
+
+.game__emoticon {
+  height: 44px;
 }
 
 .game__emoticon_img {
   height: 52px;
+  margin-top: -8px;
 }
 
 /* Стили для игрового поля */
@@ -208,7 +218,7 @@ li {
 
 /* Стили для итоговых очков пользователя */
 .final_points {
-  width: 556px;
+  position: absolute;
   padding: 0;
   margin: auto;
 }
@@ -219,8 +229,9 @@ li {
   background-color: #0077FF;
   font-size: inherit;
   padding: 15px 30px;
-  margin-top: 10px;
+  margin: 10px 0 20px 0;
   border-radius: 15px;
+  transition-duration: .5s;
 }
 
 .reset_results:hover {
@@ -229,4 +240,29 @@ li {
 
 .reset_results:active {
   background-color: #000000;
+}
+
+/* Адаптивность игрового поля для разной ширины устройств */
+@media (max-width: 600px) {
+  .game {
+    zoom: .85;
+  }
+}
+
+@media (max-width: 500px) {
+  .game {
+    zoom: .65;
+  }
+}
+
+@media (max-width: 400px) {
+  .game {
+    zoom: .58;
+  }
+}
+
+@media (max-width: 300px) {
+  .game {
+    zoom: .45;
+  }
 }

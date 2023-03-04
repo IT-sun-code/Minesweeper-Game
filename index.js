@@ -67,7 +67,6 @@ function checkNear(row, col) {
     // 2.2 Открытая ячейка
     let square = squares[row_num][col_num];
     revealSquare(square);
-    // openNearNumber(row_num, col_num);//////////////////////////////////////////////////////////////////
     // 3. Проверка клеток рядом
     if (!squares[row_num][col_num].isDigit) {
       // Проверка правой клетки
@@ -122,21 +121,6 @@ function checkNear(row, col) {
   }
 }
 
-// Открытие ближайших ячеек______________________________
-// function openNearNumber(row, col) {
-//   let square = squares[row][col];
-
-//   if (!square.isRevealed) {
-//     if (square.isDigit) {
-//       square.element.classList.add("digit");
-//       square.element.classList.add(`digit_${square.numOfNeighbouringMines}`);
-//     } else square.element.classList.add("field__empty");
-
-//     square.isRevealed = true;
-//     numOfRevealed++;
-//   }
-// }
-
 // Создание сетки клеток_________________________________
 function createBoard() {
   for (let i = 0; i < numOfRows; i++) {
@@ -187,6 +171,8 @@ function handlePress(event) {
   ) {
     if (event.button === 0) {
       emoticon.src = "images/emoticonsButtons/btnScared.png";
+      // Изменение клетки поля на прожатую
+      event.target.classList.add("field__empty");
     }
   }
 }
@@ -202,8 +188,10 @@ function handleGlobalClick(event) {
 // Поведение различных элементов игры по левому клику____
 function handleClick(event) {
   if (event.button === 0) {
-    // Изменение смайлика при зажатии клетки поля
+    // Изменение смайлика при отжатии клетки поля
     emoticon.src = "images/emoticonsButtons/btnRestart.png";
+    // Удаление стиля для прожатой клетки
+    event.target.classList.remove("field__empty");
 
     // Проверка на окончание игры
     if (gameEnded) {
@@ -230,17 +218,11 @@ function handleClick(event) {
 
     // Проверка, не окончена ли игра
     if (!gameEnded) {
-      // Заполнение пустыми клетками
-      // revealSquare(square);/////////////////////////////////////////////////////////////////////////
-
       // Запуск таймера
       if (numOfRevealed == 0) {
         startTimer();
 
         // Генерация мин
-        // const squareEmpty = document.querySelector(".field__empty");/////////////////////////////////
-        // const emptyRow = Number(squareEmpty.dataset.row);
-        // const emptyCol = Number(squareEmpty.dataset.col);
         const emptyRow = row;
         const emptyCol = col;
 
@@ -515,7 +497,7 @@ function showResult() {
 
     const resultText = document.createElement("h1");
     resultText.style.color = "#fff";
-    resultText.style.fontSize = "5rem";
+    resultText.style.fontSize = "4rem";
     resultText.style.textAlign = "center";
 
     if (hasWon) {

@@ -16,13 +16,19 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="index.js" defer></script>
   </head>
+
   <body>
     <div class="container">
+      <!-- Приветствие -->
       <header><h1>Добро пожаловать в игру Сапер</h1></header>
+
       <main>
         <div class="game">
+          <!-- Темплейт игрового пространства -->
           <div class="game__img">
             <img src="images/field/field.png" alt="field.png" />
+
+            <!-- Верхняя часть игрового поля -->
             <div class="game__top_bar">
               <div class="game__time game__counter">
                 <ul>
@@ -49,6 +55,8 @@
                   </li>
                 </ul>
               </div>
+
+              <!-- Кнопка смайлика -->
               <button class="game__emoticon">
                 <img
                   class="game__emoticon_img"
@@ -56,6 +64,8 @@
                   alt="btnRestart.png"
                 />
               </button>
+
+              <!-- Таймер -->
               <div class="game__time game__timer">
                 <ul>
                   <li>
@@ -82,10 +92,14 @@
                 </ul>
               </div>
             </div>
+
+            <!-- Игровое поле -->
             <div class="game__field"></div>
           </div>
         </div>
       </main>
+
+      <!-- Итоговые очки пользователя -->
       <footer><h2>Итоговые очки за разные игры</h2></footer>
     </div>
   </body>

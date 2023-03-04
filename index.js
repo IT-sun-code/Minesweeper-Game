@@ -195,20 +195,25 @@ function handleGlobalClick(event) {
 // Поведение различных элементов игры по левому клику____
 function handleClick(event) {
   if (event.button === 0) {
+    // Изменение смайлика при зажатии клетки поля
     emoticon.src = "images/emoticonsButtons/btnRestart.png";
 
+    // Проверка на окончание игры
     if (gameEnded) {
       return;
     }
 
+    // Получение координат кликнутой клетки
     const row = event.target.dataset.row;
     const col = event.target.dataset.col;
     const square = squares[row][col];
 
+    // Проверка на клетки, уже помеченные флагом или вопросом
     if (square.isFlagged || square.isQuestioned) {
       return;
     }
 
+    // Проверка, есть ли в клетке мина и вызов окончания игры с проигрышем
     if (square.isMine) {
       hasWon = false;
       gameEnded = true;

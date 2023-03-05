@@ -43,7 +43,6 @@ li {
   display: block;
   padding: 20px;
   color: #fff;
-  font-size: 16px;
   cursor: pointer;
   transition-duration: .5s;
 }
@@ -59,12 +58,11 @@ li {
   left: 0;
   z-index: 3;
   background-color: #fff;
-  padding: 20px;
+  padding: 10px;
   margin: 0;
 }
 
 .submenu li {
-  font-size: 16px;
   padding: 10px;
 }
 
@@ -89,7 +87,6 @@ li {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 auto;
 }
 
 .game__counter {
@@ -110,7 +107,6 @@ li {
   width: 556px;
   height: 640;
   position: relative;
-  margin: 0 auto;
 }
 
 .game__time_img {
@@ -134,7 +130,6 @@ li {
   grid-template-rows: repeat(16, 32px);
   width: 512px;
   height: 512;
-  margin: 0 auto;
   position: absolute;
   top: 103px;
   left: 19px; 

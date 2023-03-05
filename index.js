@@ -597,7 +597,7 @@ function setFinalPoints() {
   totalGamesElement.textContent = ` ${finalPoints.totalGames}`;
   winsElement.textContent = ` ${finalPoints.wins}`;
   lossesElement.textContent = ` ${finalPoints.losses}`;
-  fastestGameElement.textContent = ` ${finalPoints.fastestGame}`;
+  fastestGameElement.textContent = ` ${finalPoints.fastestGame} сек.`;
 
   localStorage.setItem("finalPoints", JSON.stringify(finalPoints));
 }
@@ -610,7 +610,7 @@ resetResultsBtn.addEventListener("click", function () {
   totalGamesElement.textContent = " 0";
   winsElement.textContent = " 0";
   lossesElement.textContent = " 0";
-  fastestGameElement.textContent = " 0";
+  fastestGameElement.textContent = " 0 сек.";
 });
 
 // Запрос имени пользователя_____________________________

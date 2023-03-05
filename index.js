@@ -58,16 +58,16 @@ function checkNear(row, col) {
   fillStack.push([row, col]);
 
   while (!fillStack.isEmpty()) {
-    // 1. Получение позиции
+    // Получение позиции
     let pos = fillStack.peek();
     fillStack.pop();
-    // 2.1 Получение строки и столбца
+    // Получение строки и столбца
     let row_num = Number(pos[0]);
     let col_num = Number(pos[1]);
-    // 2.2 Открытая ячейка
+    // Открытая ячейка
     let square = squares[row_num][col_num];
     revealSquare(square);
-    // 3. Проверка клеток рядом
+    // Проверка клеток рядом
     if (!squares[row_num][col_num].isDigit) {
       // Проверка правой клетки
       if (row_num + 1 < 16) {
@@ -156,7 +156,7 @@ function revealSquare(square) {
   if (square.isDigit) {
     square.element.classList.add("digit");
     square.element.classList.add(`digit_${square.numOfNeighbouringMines}`);
-  } else square.element.classList.add("field__empty");
+  } else square.element.classList.add("field_empty");
 
   square.isRevealed = true;
   numOfRevealed++;
@@ -167,13 +167,13 @@ function handlePress(event) {
   if (
     !event.target.classList.contains("flagged") &&
     !event.target.classList.contains("questioned") &&
-    !event.target.classList.contains("field__empty") &&
+    !event.target.classList.contains("field_empty") &&
     !event.target.classList.contains("digit")
   ) {
     if (event.button === 0) {
       emoticon.src = "images/emoticonsButtons/btnScared.png";
       // Изменение клетки поля на прожатую
-      event.target.classList.add("field__empty");
+      event.target.classList.add("field_empty");
     }
   }
 }
@@ -211,8 +211,8 @@ function handleLeftClick(event) {
     if (square.isMine) {
       hasWon = false;
       gameEnded = true;
-      square.element.classList.remove("field__empty");
-      square.element.classList.add("bomb__expoled");
+      square.element.classList.remove("field_empty");
+      square.element.classList.add("bomb_expoled");
       gameOver();
       return;
     }
@@ -220,18 +220,18 @@ function handleLeftClick(event) {
     // Проверка, не окончена ли игра
     if (!gameEnded) {
       // Запуск таймера
-      if (numOfRevealed == 0) {
+      if (numOfRevealed === 0) {
         startTimer();
 
         // Генерация мин
-        const emptyRow = row;
-        const emptyCol = col;
+        const emptyRow = Number(row);
+        const emptyCol = Number(col);
 
         let numMinesRemaining = numOfMines;
         while (numMinesRemaining > 0) {
           const row = Math.floor(Math.random() * numOfRows);
           const col = Math.floor(Math.random() * numOfCols);
-          if (row !== emptyRow || col !== emptyCol) {
+          if (row !== emptyRow && col !== emptyCol) {
             if (!squares[row][col].isMine) {
               squares[row][col].isMine = true;
               numMinesRemaining--;
@@ -294,7 +294,7 @@ function handleRightClick(event) {
     const row = event.target.dataset.row;
     const col = event.target.dataset.col;
     const square = squares[row][col];
-    if (!square.isRevealed && numOfFlagged != 40) {
+    if (!square.isRevealed && numOfFlagged !== 40) {
       const markSound = new Audio("sounds/mark_flag_or_question.mp3");
       markSound.play();
       if (square.isFlagged) {
@@ -316,7 +316,7 @@ function handleRightClick(event) {
         numOfFlagged++;
         setCounter();
       }
-    } else if (square.isFlagged && numOfFlagged == 40) {
+    } else if (square.isFlagged && numOfFlagged === 40) {
       square.isFlagged = false;
       square.element.classList.remove("flagged");
       square.element.classList.add("questioned");
@@ -365,31 +365,36 @@ let hundreds = 0;
 
 function startTimer() {
   timer = setInterval(() => {
-    if ((hundreds == 9 && dozens == 9 && units == 9) || gameEnded) {
+    if (gameEnded) {
       clearInterval(timer);
       return;
     }
     ++units;
-    if (units == 10) {
+    if (units === 10) {
       ++dozens;
       units = 0;
     }
-    if (dozens == 10) {
+    if (dozens === 10) {
       ++hundreds;
       dozens = 0;
     }
+
     seconds--;
     timerUnits.src = `images/timerDigits/timerDigit_${units}.png`;
     timerDozens.src = `images/timerDigits/timerDigit_${dozens}.png`;
     timerHundreds.src = `images/timerDigits/timerDigit_${hundreds}.png`;
     const tickingSound = new Audio("sounds/timer_ticking.mp3");
     tickingSound.play();
+
+    if (hundreds === 9 && dozens === 9 && units === 9) {
+      gameOver();
+    }
   }, 1000);
 }
 
 // Перезагрузка игры_____________________________________
 function gameReset() {
-  // 1. Сброс переменных
+  // Сброс переменных
   counter = 40;
   units = 0;
   dozens = 0;
@@ -398,28 +403,29 @@ function gameReset() {
   numOfFlagged = 0;
   numOfQuestioned = 0;
   seconds = 999;
-  // 2. Сброс поля
+  // Сброс поля
   for (let i = 0; i < numOfRows; i++)
     for (let j = 0; j < numOfCols; j++) squares[i][j].element.remove();
   squares = [];
   createBoard();
   gameEnded = false;
-  // 3. Сброс таймера
+  // Сброс таймера
   timerUnits.src = `images/timerDigits/timerDigit_0.png`;
   timerDozens.src = `images/timerDigits/timerDigit_0.png`;
   timerHundreds.src = `images/timerDigits/timerDigit_0.png`;
   clearInterval(timer);
-  // 4. Сброс счетчика мин
+  // Сброс счетчика мин
   counterUnits.src = `images/timerDigits/timerDigit_0.png`;
   counterDozens.src = `images/timerDigits/timerDigit_4.png`;
-  // 5. Сброс смайлика
+  // Сброс смайлика
   emoticon.src = "images/emoticonsButtons/btnRestart.png";
-  // 6. Остановка звука конца игры
+  // Остановка звука конца игры
   if (endGameSound) {
     endGameSound.pause();
   }
 }
-// 7. Поведение смайлика при нажатии и отжатии
+
+// Поведение смайлика при нажатии и отжатии_______________
 const emoticon = document.querySelector(".game__emoticon_img");
 
 emoticon.addEventListener("mousedown", handlePushEmoticon);
@@ -436,7 +442,8 @@ function handleResetEmoticon(event) {
   }
 }
 
-document.addEventListener("keydown", handleSpace); //////////////ДЛЯ ПРОБЕЛА - рестарт игры
+// Рестарт игры по нажатию пробела_______________________
+document.addEventListener("keydown", handleSpace);
 function handleSpace(event) {
   if (event.keyCode === 32) {
     event.preventDefault();
@@ -445,7 +452,8 @@ function handleSpace(event) {
   }
 }
 
-document.addEventListener("keyup", handleBackspace); ////////////////ДЛЯ БЭКСПЕЙСА - обнулить
+// Обнуление результатов игры по нажатию бэкспейса_______
+document.addEventListener("keyup", handleBackspace);
 function handleBackspace(event) {
   if (event.keyCode === 8) {
     localStorage.clear();

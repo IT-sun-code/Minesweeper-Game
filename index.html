@@ -61,6 +61,7 @@
         <h1><span id="user_name"></span> добро пожаловать в игру Сапер!</h1>
       </header>
 
+      <!-- Основной блок страницы -->
       <main>
         <div class="game">
           <!-- Темплейт игрового пространства и результаты -->
@@ -139,15 +140,19 @@
             <div class="game__field"></div>
 
             <!-- Итоговые очки пользователя -->
-            <h2>
-              <ul class="final_points">
-                <li>ВСЕГО ИГР:<span id="total_games"> ?</span></li>
-                <li>ПОБЕДЫ: <span id="wins"> ?</span></li>
-                <li>ПОРАЖЕНИЯ:<span id="losses"> ?</span></li>
-                <li>САМАЯ БЫСТРАЯ ПОБЕДА:<span id="fastest_game"> ?</span></li>
-                <li><button class="reset_results">ОБНУЛИТЬ</button></li>
-              </ul>
-            </h2>
+            <div>
+              <h2>
+                <ul class="final_points">
+                  <li>ВСЕГО ИГР:<span id="total_games"> ?</span></li>
+                  <li>ПОБЕДЫ: <span id="wins"> ?</span></li>
+                  <li>ПОРАЖЕНИЯ:<span id="losses"> ?</span></li>
+                  <li>
+                    САМАЯ БЫСТРАЯ ПОБЕДА:<span id="fastest_game"> ?</span>
+                  </li>
+                  <li><button class="reset_results">ОБНУЛИТЬ</button></li>
+                </ul>
+              </h2>
+            </div>
           </div>
         </div>
       </main>

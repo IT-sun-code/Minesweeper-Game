@@ -72,6 +72,7 @@ li {
   display: block;
 }
 
+/* Стили для игрового пространтсва */
 .game {
   width: 556px;
   margin: auto;
@@ -91,18 +92,18 @@ li {
   margin: 0 auto;
 }
 
-.game__time ul {
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-
 .game__counter {
   padding-left: 12px;
 }
 
 .game__timer {
   padding-right: 12px;
+}
+
+.game__time ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
 }
 
 .game__img {
@@ -166,7 +167,7 @@ li {
   background-image: url("images/fieldCells/cells/cellUndiscovered.png");
 }
 
-.bomb__expoled {
+.bomb_expoled {
   background-image: url("images/fieldCells/mines/mineExploded.png")
 }
 
@@ -175,7 +176,7 @@ li {
   background-image: url("images/fieldCells/mines/mineDecoy.png")
 }
 
-.field__empty {
+.field_empty {
   background-image: url("images/fieldCells/cells/cellEmpty.png")
 }
 

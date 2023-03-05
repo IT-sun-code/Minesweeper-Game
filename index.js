@@ -19,33 +19,27 @@ class Stack {
   constructor() {
     this.items = [];
   }
-
   // Помещение элемента в стек
   push(element) {
     this.items.push(element);
   }
-
   // Извлечение элемента из стека
   pop() {
     if (this.items.length === 0) return "Underflow";
     return this.items.pop();
   }
-
   // Получение верхнего элемента стека
   peek() {
     return this.items[this.items.length - 1];
   }
-
   // Проверка, пуст ли стек
   isEmpty() {
     return this.items.length === 0;
   }
-
   // Получение размера стека
   size() {
     return this.items.length;
   }
-
   // Очищение стека
   clear() {
     this.items = [];
@@ -53,7 +47,7 @@ class Stack {
 }
 
 // Проверка ближайших клеток_____________________________
-function checkNear(row, col) {
+function checkNearCells(row, col) {
   let fillStack = new Stack();
   fillStack.push([row, col]);
 
@@ -269,7 +263,7 @@ function handleLeftClick(event) {
 
       // Проверка соседних клеток
       if (!square.isDigit) {
-        checkNear(Number(row), Number(col));
+        checkNearCells(Number(row), Number(col));
       } else {
         revealSquare(square);
       }

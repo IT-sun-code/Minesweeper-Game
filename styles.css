@@ -144,6 +144,10 @@ li {
   cursor: pointer;
 }
 
+.active {
+  opacity: 30%;
+}
+
 /* Стили для клеток поля по правому клику мышкой */
 .flagged {
   background-image: url("images/fieldCells/flag/flag.png")

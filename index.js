@@ -13,6 +13,8 @@ let gameEnded = false;
 let hasWon = "";
 let timer = null;
 let seconds = 999;
+let activeCellRow = 0;
+let activeCellCol = 0;
 
 // Запрос имени пользователя_____________________________
 const playerName = prompt("Как вас зовут?");
@@ -176,7 +178,11 @@ function revealSquare(square) {
 
 // Поведение различных элементов игры по левому клику____
 function handleLeftClick(event) {
-  if (event.button === 0) {
+  let leftClick = false;
+  if (event != null) {
+    leftClick = event.button === 0;
+  }
+  if (leftClick || event == null) {
     // Изменение смайлика при отжатии клетки поля
     emoticon.src = "images/emoticonsButtons/btnRestart.png";
 
@@ -186,8 +192,15 @@ function handleLeftClick(event) {
     }
 
     // Получение координат кликнутой клетки
-    const row = event.target.dataset.row;
-    const col = event.target.dataset.col;
+    let row = 0;
+    let col = 0;
+    if (event != null) {
+      row = event.target.dataset.row;
+      col = event.target.dataset.col;
+    } else {
+      row = activeCellRow;
+      col = activeCellCol;
+    }
     const square = squares[row][col];
 
     // Проверка на клетки, уже помеченные флагом или вопросом
@@ -275,12 +288,21 @@ function handleLeftClick(event) {
 // Поведение различных элементов игры по правому клику___
 function handleRightClick(event) {
   if (numOfRevealed >= 1) {
-    event.preventDefault();
+    if (event != null) {
+      event.preventDefault();
+    }
     if (gameEnded) {
       return;
     }
-    const row = event.target.dataset.row;
-    const col = event.target.dataset.col;
+    let row = 0;
+    let col = 0;
+    if (event != null) {
+      row = event.target.dataset.row;
+      col = event.target.dataset.col;
+    } else {
+      row = activeCellRow;
+      col = activeCellCol;
+    }
     const square = squares[row][col];
     if (!square.isRevealed && numOfFlagged !== 40) {
       const markSound = new Audio("sounds/mark_flag_or_question.mp3");
@@ -454,28 +476,6 @@ function handleGlobalClick(event) {
   }
 }
 
-// Рестарт игры по нажатию пробела_______________________
-document.addEventListener("keydown", handleSpace);
-function handleSpace(event) {
-  if (event.keyCode === 32) {
-    event.preventDefault();
-    emoticon.src = "images/emoticonsButtons/btnRestartPressed.png";
-    gameReset();
-  }
-}
-
-// Обнуление результатов игры по нажатию бэкспейса_______
-document.addEventListener("keyup", handleBackspace);
-function handleBackspace(event) {
-  if (event.keyCode === 8) {
-    localStorage.clear();
-    totalGamesElement.textContent = " 0";
-    winsElement.textContent = " 0";
-    lossesElement.textContent = " 0";
-    fastestGameElement.textContent = " 0";
-  }
-}
-
 // Конец игры____________________________________________
 let endGameSound;
 
@@ -635,3 +635,79 @@ resetResultsBtn.addEventListener("click", function () {
 
 // Вызов игры____________________________________________
 createBoard();
+
+// Обработчик нажатия клавиш для игры с клавиатуры_______
+document.addEventListener("keydown", function (event) {
+  let activeCell = document.querySelector(".active");
+  // проверяем нажатую клавишу
+  switch (event.keyCode) {
+    case 13: // Enter
+      if (activeCell) {
+        handleLeftClick();
+      }
+      break;
+    case 17: // Ctrl
+      if (activeCell) {
+        handleRightClick();
+      }
+      break;
+    case 37: // влево
+      if (activeCellCol > 0) {
+        squares[activeCellRow][activeCellCol].element.classList.remove(
+          "active"
+        );
+        activeCellCol--;
+        squares[activeCellRow][activeCellCol].element.classList.add("active");
+      }
+      break;
+    case 38: // вверх
+      if (activeCellRow > 0) {
+        squares[activeCellRow][activeCellCol].element.classList.remove(
+          "active"
+        );
+        activeCellRow--;
+        squares[activeCellRow][activeCellCol].element.classList.add("active");
+      }
+      break;
+    case 39: // вправо
+      if (activeCellCol < squares[activeCellRow].length - 1) {
+        squares[activeCellRow][activeCellCol].element.classList.remove(
+          "active"
+        );
+        activeCellCol++;
+        squares[activeCellRow][activeCellCol].element.classList.add("active");
+      }
+      break;
+    case 40: // вниз
+      if (activeCellRow < squares.length - 1) {
+        squares[activeCellRow][activeCellCol].element.classList.remove(
+          "active"
+        );
+        activeCellRow++;
+        squares[activeCellRow][activeCellCol].element.classList.add("active");
+      }
+      break;
+  }
+});
+
+// Рестарт игры по нажатию пробела_______________________
+document.addEventListener("keydown", handleSpace);
+function handleSpace(event) {
+  if (event.keyCode === 32) {
+    event.preventDefault();
+    emoticon.src = "images/emoticonsButtons/btnRestartPressed.png";
+    gameReset();
+  }
+}
+
+// Обнуление результатов игры по нажатию бэкспейса_______
+document.addEventListener("keyup", handleBackspace);
+function handleBackspace(event) {
+  if (event.keyCode === 8) {
+    localStorage.clear();
+    totalGamesElement.textContent = " 0";
+    winsElement.textContent = " 0";
+    lossesElement.textContent = " 0";
+    fastestGameElement.textContent = " 0";
+  }
+}

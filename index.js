@@ -131,9 +131,10 @@ function createBoard() {
       square.dataset.row = i;
       square.dataset.col = j;
       square.addEventListener("mousedown", handlePress);
-      square.addEventListener("mouseup", handleClick);
+      square.addEventListener("mouseup", handleLeftClick);
       square.addEventListener("contextmenu", handleRightClick);
       document.addEventListener("mouseup", handleGlobalClick);
+
       gameField.appendChild(square);
       squares[i][j] = {
         element: square,
@@ -186,12 +187,10 @@ function handleGlobalClick(event) {
 }
 
 // Поведение различных элементов игры по левому клику____
-function handleClick(event) {
+function handleLeftClick(event) {
   if (event.button === 0) {
     // Изменение смайлика при отжатии клетки поля
     emoticon.src = "images/emoticonsButtons/btnRestart.png";
-    // Удаление стиля для прожатой клетки
-    event.target.classList.remove("field__empty");
 
     // Проверка на окончание игры
     if (gameEnded) {
@@ -212,8 +211,10 @@ function handleClick(event) {
     if (square.isMine) {
       hasWon = false;
       gameEnded = true;
+      square.element.classList.remove("field__empty");
       square.element.classList.add("bomb__expoled");
       gameOver();
+      return;
     }
 
     // Проверка, не окончена ли игра
@@ -411,12 +412,14 @@ function gameReset() {
   // 4. Сброс счетчика мин
   counterUnits.src = `images/timerDigits/timerDigit_0.png`;
   counterDozens.src = `images/timerDigits/timerDigit_4.png`;
-  // 5. Остановка звука конца игры
+  // 5. Сброс смайлика
+  emoticon.src = "images/emoticonsButtons/btnRestart.png";
+  // 6. Остановка звука конца игры
   if (endGameSound) {
     endGameSound.pause();
   }
 }
-// 6. Поведение смайлика при нажатии и отжатии
+// 7. Поведение смайлика при нажатии и отжатии
 const emoticon = document.querySelector(".game__emoticon_img");
 
 emoticon.addEventListener("mousedown", handlePushEmoticon);
@@ -430,6 +433,26 @@ emoticon.addEventListener("mouseup", handleResetEmoticon);
 function handleResetEmoticon(event) {
   if (event.button === 0) {
     gameReset();
+  }
+}
+
+document.addEventListener("keydown", handleSpace); //////////////ДЛЯ ПРОБЕЛА - рестарт игры
+function handleSpace(event) {
+  if (event.keyCode === 32) {
+    event.preventDefault();
+    emoticon.src = "images/emoticonsButtons/btnRestartPressed.png";
+    gameReset();
+  }
+}
+
+document.addEventListener("keyup", handleBackspace); ////////////////ДЛЯ БЭКСПЕЙСА - обнулить
+function handleBackspace(event) {
+  if (event.keyCode === 8) {
+    localStorage.clear();
+    totalGamesElement.textContent = " 0";
+    winsElement.textContent = " 0";
+    lossesElement.textContent = " 0";
+    fastestGameElement.textContent = " 0";
   }
 }
 
@@ -581,6 +604,7 @@ function setFinalPoints() {
 
 // Очищение localStorage________________________________
 const resetResultsBtn = document.querySelector(".reset_results");
+
 resetResultsBtn.addEventListener("click", function () {
   localStorage.clear();
   totalGamesElement.textContent = " 0";
@@ -598,7 +622,7 @@ if (!playerName) {
   userName.textContent = `${playerName.trim()},`;
 }
 
-//
+// Открытие и закрытие меню Правил игры__________________
 const menuItems = document.querySelectorAll(".menu__item");
 
 menuItems.forEach((item) => {

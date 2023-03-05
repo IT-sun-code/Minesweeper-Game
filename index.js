@@ -14,6 +14,24 @@ let hasWon = "";
 let timer = null;
 let seconds = 999;
 
+// Запрос имени пользователя_____________________________
+const playerName = prompt("Как вас зовут?");
+const userName = document.getElementById("user_name");
+if (!playerName) {
+  userName.textContent = "Игрок,";
+} else {
+  userName.textContent = `${playerName.trim()},`;
+}
+
+// Открытие и закрытие меню Правил игры__________________
+const menuItems = document.querySelectorAll(".menu__item");
+
+menuItems.forEach((item) => {
+  item.addEventListener("click", () => {
+    item.classList.toggle("active");
+  });
+});
+
 // Создание стека________________________________________
 class Stack {
   constructor() {
@@ -154,30 +172,6 @@ function revealSquare(square) {
 
   square.isRevealed = true;
   numOfRevealed++;
-}
-
-// Изменение смайлика при зажатии клетки поля____________
-function handlePress(event) {
-  if (
-    !event.target.classList.contains("flagged") &&
-    !event.target.classList.contains("questioned") &&
-    !event.target.classList.contains("field_empty") &&
-    !event.target.classList.contains("digit")
-  ) {
-    if (event.button === 0) {
-      emoticon.src = "images/emoticonsButtons/btnScared.png";
-      // Изменение клетки поля на прожатую
-      event.target.classList.add("field_empty");
-    }
-  }
-}
-
-// Изменение поведения смайлика в случае наведения мыши__
-// за пределы поля_______________________________________
-function handleGlobalClick(event) {
-  if (event.button === 0 && !gameEnded) {
-    emoticon.src = "images/emoticonsButtons/btnRestart.png";
-  }
 }
 
 // Поведение различных элементов игры по левому клику____
@@ -436,6 +430,30 @@ function handleResetEmoticon(event) {
   }
 }
 
+// Изменение смайлика при зажатии клетки поля____________
+function handlePress(event) {
+  if (
+    !event.target.classList.contains("flagged") &&
+    !event.target.classList.contains("questioned") &&
+    !event.target.classList.contains("field_empty") &&
+    !event.target.classList.contains("digit")
+  ) {
+    if (event.button === 0) {
+      emoticon.src = "images/emoticonsButtons/btnScared.png";
+      // Изменение клетки поля на прожатую
+      event.target.classList.add("field_empty");
+    }
+  }
+}
+
+// Изменение поведения смайлика в случае наведения мыши__
+// за пределы поля_______________________________________
+function handleGlobalClick(event) {
+  if (event.button === 0 && !gameEnded) {
+    emoticon.src = "images/emoticonsButtons/btnRestart.png";
+  }
+}
+
 // Рестарт игры по нажатию пробела_______________________
 document.addEventListener("keydown", handleSpace);
 function handleSpace(event) {
@@ -613,24 +631,6 @@ resetResultsBtn.addEventListener("click", function () {
   winsElement.textContent = " 0";
   lossesElement.textContent = " 0";
   fastestGameElement.textContent = " 0 сек.";
-});
-
-// Запрос имени пользователя_____________________________
-const playerName = prompt("Как вас зовут?");
-const userName = document.getElementById("user_name");
-if (!playerName) {
-  userName.textContent = "Игрок,";
-} else {
-  userName.textContent = `${playerName.trim()},`;
-}
-
-// Открытие и закрытие меню Правил игры__________________
-const menuItems = document.querySelectorAll(".menu__item");
-
-menuItems.forEach((item) => {
-  item.addEventListener("click", () => {
-    item.classList.toggle("active");
-  });
 });
 
 // Вызов игры____________________________________________

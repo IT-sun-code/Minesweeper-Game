@@ -1,7 +1,7 @@
 # Minesweeper-game
 
 Разработанная для ВКонтакте игра Сапер по приложенному ТЗ и спрайту
-Результат: https://it-sun-code.github.io/Minesweeper-game/
+<br>Результат: https://it-sun-code.github.io/Minesweeper-game/
 
 ## Инструкция для запуска файла
 
